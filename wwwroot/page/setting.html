@@ -24,7 +24,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">Http协议</label>
                     <div class="layui-input-block">
-                        <input type="text" name="GoCQHttp_Http" lay-verify="required" lay-reqtext="Http协议必填" autocomplete="off" class="layui-input">
+                        <input type="text" name="cqhttpHttp" lay-verify="required" lay-reqtext="Http协议必填" autocomplete="off" class="layui-input">
                         <div class="layui-form-mid layui-word-aux">
                             填写示例：http://192.168.2.199:8000
                         </div>
@@ -33,7 +33,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">WS协议</label>
                     <div class="layui-input-block">
-                        <input type="text" name="GoCQHttp_WebSocket" lay-verify="required" lay-reqtext="WS协议必填" placeholder="" autocomplete="off" class="layui-input">
+                        <input type="text" name="cqhttpWS" lay-verify="required" lay-reqtext="WS协议必填" placeholder="" autocomplete="off" class="layui-input">
                         <div class="layui-form-mid layui-word-aux">
                             填写示例：ws://192.168.2.199:8001
                         </div>
@@ -51,18 +51,18 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">管理QQ</label>
                     <div class="layui-input-block">
-                        <input type="text" name="ManagerQQ" placeholder="请输入机器人管理QQ号码" autocomplete="off" class="layui-input">
+                        <input type="text" name="ManagerQQ" lay-verify="required" lay-reqtext="管理QQ号码必填" placeholder="请输入机器人管理QQ号码" autocomplete="off" class="layui-input">
                         <div class="layui-form-mid layui-word-aux">
-                            请输入机器人管理QQ号码（暂无特殊作用，待升级）
+                            可用指令：QQBot更新
                         </div>
                     </div>
                 </div>
-                <div class="layui-form-item">
+                <!--<div class="layui-form-item">
                     <label class="layui-form-label">UserAgent</label>
                     <div class="layui-input-block">
                         <input type="text" name="ua" placeholder="" autocomplete="off" class="layui-input">
                     </div>
-                </div>
+                </div>-->
                 <div class="layui-form-item">
                     <div class="layui-input-block">
                         <button class="layui-btn" lay-submit lay-filter="setting">提交</button>
@@ -85,16 +85,15 @@
             common.ajax("/SystemConfig", "get", {}, function (data) {
                 if (data) {
                     console.log(data);
-                    $("input[name=GoCQHttp_Http]").val(data.GoCQHttp_Http);
-                    $("input[name=GoCQHttp_WebSocket]").val(data.GoCQHttp_WebSocket);
-                    $("input[name=agree_friend]").val(data.agree_friend);
+                    $("input[name=cqhttpHttp]").val(data.cqhttpHttp);
+                    $("input[name=cqhttpWS]").val(data.cqhttpWS);
                     $("input[name=Groups]").val(data.Groups);
                     $("input[name=ManagerQQ]").val(data.ManagerQQ);
                 }
             });
             //监听提交
             form.on('submit(setting)', function (data) {
-                layer.confirm('确认重新配置系统？提交后将重新连接go-cqhttp！', function (index) {
+                layer.confirm('确认重新配置系统？', function (index) {
                     common.ajax("/SystemConfig", "post", data.field, function (data) {
                         if (data) {
                             layer.msg("系统配置生效！", { icon: 6 });

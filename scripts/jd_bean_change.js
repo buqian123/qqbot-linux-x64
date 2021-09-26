@@ -313,7 +313,7 @@ function redPacket() {
                         $.jxRed = 0, $.jsRed = 0, $.jdRed = 0, $.jdhRed = 0, $.jxRedExpire = 0, $.jsRedExpire = 0, $.jdRedExpire = 0, $.jdhRedExpire = 0;
                         let t = new Date()
                         t.setDate(t.getDate() + 1)
-                        t.setHours(12, 0, 0, 0)
+                        t.setHours(0, 0, 0, 0)
                         t = parseInt((t - 1) / 1000)
 
                         for (let vo of data.useRedInfo.redList || []) {
@@ -352,6 +352,7 @@ function redPacket() {
 京东红包：${$.jdRed}(今日过期${$.jdRedExpire.toFixed(2)})元 🧧
 健康红包：${$.jdhRed}(今日过期${$.jdhRedExpire.toFixed(2)})元 🧧`;
                     } else {
+                        console.log(`京东服务器返回空数据`)
                     }
                 }
             } catch (e) {

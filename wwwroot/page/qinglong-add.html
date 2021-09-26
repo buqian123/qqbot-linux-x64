@@ -32,14 +32,26 @@
         <div class="layui-form-item">
             <label class="layui-form-label required">用户名</label>
             <div class="layui-input-block">
-                <input type="text" id="UserName" name="UserName" lay-verify="required" lay-reqtext="面板登录用户名不能为空" value="" class="layui-input">
+                <input type="text" id="UserName" name="UserName" class="layui-input">
                 <input type="hidden" id="Id" name="Id">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label required">密码</label>
             <div class="layui-input-block">
-                <input type="password" id="PassWord" name="PassWord" lay-verify="required" lay-reqtext="面板登录密码不能为空" value="" class="layui-input">
+                <input type="password" id="PassWord" name="PassWord" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">Client ID</label>
+            <div class="layui-input-block">
+                <input type="text" id="UserName" name="ClientID" lay-verify="required" lay-reqtext="Client ID不能为空" value="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">Client Secret</label>
+            <div class="layui-input-block">
+                <input type="text" id="PassWord" name="ClientSecret" lay-verify="required" lay-reqtext="ClientSecret不能为空" value="" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -78,26 +90,19 @@
                         $("#PassWord").val(data.PassWord);
                         $("#Address").val(data.Address);
                         $("#Weigth").val(data.Weigth);
+                        $("#ClientID").val(data.ClientID);
+                        $("#ClientSecrets").val(data.ClientSecret);
                     }
                 });
             }
-            //if (common.ge)
-
             //监听提交
             form.on('submit(saveBtn)', function (data) {
-
                 if (data.field.Weigth < 1) {
                     layer.msg("权重值必须大于0", { icon: 5 });
                 }
                 common.ajax("/QLConfig", "post", data.field, function (data) {
                     var index = layer.msg("面板信息提交成功！", function (data) {
-
                         parent.document.location.reload();
-                        // 关闭弹出层
-                        //layer.close(index);
-                        //var iframeIndex = parent.layer.getFrameIndex(window.name);
-                        //parent.layer.close(iframeIndex);
-
                     })
                 });
                 return false;

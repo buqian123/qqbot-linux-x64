@@ -39,7 +39,6 @@
             <script type="text/html" id="toolbarDemo">
                 <div class="layui-btn-container">
                     <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="Sync"> Cookie同步 </button>
-                    <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="reset"> Cookie分配重置 </button>
                 </div>
             </script>
 
@@ -138,15 +137,8 @@
                 if (obj.event === 'Sync') {  // 监听添加操作
                     layer.confirm('确定重新同步Cookie信息吗？', function (index) {
                         common.ajax(`/JDCookie/Sync`, "get", {}, function (data) {
-                            layer.msg("同步操作成功，该操作需要一些时间，请稍后刷新查看！", { icon: 6 });
+                            layer.msg("同步操作成功，请稍后刷新账号查看！", { icon: 6 });
                         });
-                    });
-                } else if (obj.event === 'reset') {  // 监听添加操作
-                    layer.confirm('重置分配Cookie将重新按面板权重分配所有Cookie，确定要这样操作？', function (index) {
-                        common.ajax(`/JDCookie/Reset`, "get", {}, function (data) {
-                        });
-
-                        layer.msg("重置分配操作成功，该操作需要一些时间，请稍后刷新查看！", { icon: 6 });
                     });
                 }
             });
