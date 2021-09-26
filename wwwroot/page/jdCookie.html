@@ -71,7 +71,11 @@
                         cols: [[
                             { type: "checkbox", width: 50 },
                             { field: 'ContainerName', width: 120, title: '青龙容器', sort: true },
-                            { field: 'PTPin', title: 'PTPin' },
+                            {
+                                field: 'PTPin', title: 'PTPin', templet(d) {
+                                    return `pt_key=${d.PTKey};pt_pin=${d.PTPin};`;
+                                }
+                            },
                             {
                                 field: 'QQ', title: 'QQ', sort: true, templet(d) {
                                     if (d.QQ > 0) {

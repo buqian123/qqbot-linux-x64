@@ -45,13 +45,13 @@
         <div class="layui-form-item">
             <label class="layui-form-label required">Client ID</label>
             <div class="layui-input-block">
-                <input type="text" id="UserName" name="ClientID" lay-verify="required" lay-reqtext="Client ID不能为空" value="" class="layui-input">
+                <input type="text" id="ClientID" name="ClientID" lay-verify="required" lay-reqtext="Client ID不能为空" value="" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label required">Client Secret</label>
             <div class="layui-input-block">
-                <input type="text" id="PassWord" name="ClientSecret" lay-verify="required" lay-reqtext="ClientSecret不能为空" value="" class="layui-input">
+                <input type="text" id="ClientSecret" name="ClientSecret" lay-verify="required" lay-reqtext="ClientSecret不能为空" value="" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -91,7 +91,7 @@
                         $("#Address").val(data.Address);
                         $("#Weigth").val(data.Weigth);
                         $("#ClientID").val(data.ClientID);
-                        $("#ClientSecrets").val(data.ClientSecret);
+                        $("#ClientSecret").val(data.ClientSecret);
                     }
                 });
             }

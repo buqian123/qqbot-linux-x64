@@ -47,6 +47,8 @@
                         { field: 'Address', title: '面板地址', sort: true },
                         { field: 'UserName', title: '用户名' },
                         { field: 'PassWord', title: '密码', sort: true },
+                        { field: 'ClientID', title: 'ClientID' },
+                        { field: 'ClientSecret', title: 'ClientSecret', sort: true },
                         { field: 'CookieCount', width: 90, title: 'CK数量' },
                         { field: 'Weigth', title: '分配权重', minWidth: 90 },
                         { title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center" }
@@ -89,7 +91,7 @@
                         title: '编辑青龙面板',
                         type: 2,
                         shade: 0.2,
-                        area: ['50%', '60%'],
+                        area: ['50%', '80%'],
                         content: '../page/qinglong-add.html?id=' + data.Id,
                     });
                     $(window).on("resize", function () {
