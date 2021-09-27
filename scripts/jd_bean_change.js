@@ -313,7 +313,7 @@ function redPacket() {
                         $.jxRed = 0, $.jsRed = 0, $.jdRed = 0, $.jdhRed = 0, $.jxRedExpire = 0, $.jsRedExpire = 0, $.jdRedExpire = 0, $.jdhRedExpire = 0;
                         let t = new Date()
                         t.setDate(t.getDate() + 1)
-                        t.setHours(0, 0, 0, 0)
+                        t.setHours(12, 0, 0, 0)
                         t = parseInt((t - 1) / 1000)
 
                         for (let vo of data.useRedInfo.redList || []) {
