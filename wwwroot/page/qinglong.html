@@ -46,9 +46,15 @@
                         { field: 'Name', title: '面板名称', sort: true },
                         { field: 'Address', title: '面板地址', sort: true },
                         { field: 'UserName', title: '用户名' },
-                        { field: 'PassWord', title: '密码', sort: true },
+                        {
+                            field: 'PassWord', title: '密码', sort: true, templet(d) {
+                                return "******";
+                            }},
                         { field: 'ClientID', title: 'ClientID' },
-                        { field: 'ClientSecret', title: 'ClientSecret', sort: true },
+                        {
+                            field: 'ClientSecret', title: 'ClientSecret', sort: true, templet(d) {
+                                return "******";
+                            } },
                         { field: 'CookieCount', width: 90, title: 'CK数量' },
                         { field: 'Weigth', title: '分配权重', minWidth: 90 },
                         { title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center" }
