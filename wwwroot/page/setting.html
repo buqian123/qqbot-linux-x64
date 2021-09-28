@@ -52,17 +52,16 @@
                     <label class="layui-form-label">管理QQ</label>
                     <div class="layui-input-block">
                         <input type="text" name="ManagerQQ" lay-verify="required" lay-reqtext="管理QQ号码必填" placeholder="请输入机器人管理QQ号码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">查询限制</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="MaxQueryCount" lay-verify="required" lay-reqtext="单日最大查询" placeholder="输入单日每个QQ号查询的次数，0表示无限制" autocomplete="off" class="layui-input">
                         <div class="layui-form-mid layui-word-aux">
-                            可用指令：QQBot更新
                         </div>
                     </div>
                 </div>
-                <!--<div class="layui-form-item">
-                    <label class="layui-form-label">UserAgent</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="ua" placeholder="" autocomplete="off" class="layui-input">
-                    </div>
-                </div>-->
                 <div class="layui-form-item">
                     <div class="layui-input-block">
                         <button class="layui-btn" lay-submit lay-filter="setting">提交</button>
@@ -80,8 +79,6 @@
                 , layer = layui.layer
                 , common = layui.common
                 , $ = layui.jquery;
-
-
             common.ajax("/SystemConfig", "get", {}, function (data) {
                 if (data) {
                     console.log(data);
@@ -89,6 +86,7 @@
                     $("input[name=cqhttpWS]").val(data.cqhttpWS);
                     $("input[name=Groups]").val(data.Groups);
                     $("input[name=ManagerQQ]").val(data.ManagerQQ);
+                    $("input[name=MaxQueryCount]").val(data.MaxQueryCount);
                 }
             });
             //监听提交

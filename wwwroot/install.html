@@ -88,7 +88,6 @@
                     layer.msg("两次密码输入不一致！", { icon: 5 });
                     return false;
                 }
-
                 layer.confirm('请确认您要提交的配置，如果数据库配置错误将无法启动。', function (index) {
                     $.post("/api/install", {
                         UserName: data.UserName,
@@ -108,8 +107,6 @@
                         }
                     });
                 });
-
-
                 return false;
             });
         });
