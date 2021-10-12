@@ -34,6 +34,7 @@
             <div class="layui-input-block">
                 <input type="text" id="UserName" name="UserName" class="layui-input">
                 <input type="hidden" id="Id" name="Id">
+                <input type="hidden" id="EnableAll" name="EnableAll" value="false">
             </div>
         </div>
         <div class="layui-form-item">
@@ -63,7 +64,15 @@
                 </div>
             </div>
         </div>
-
+        <div class="layui-form-item">
+            <label class="layui-form-label">全量模式</label>
+            <div class="layui-input-block">
+                <input type="checkbox" lay-skin="switch" lay-filter="switchTest" lay-text="开|关">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                开启全量模式权重值不生效，该容器将拥有所有的Cookie。
+            </div>
+        </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
@@ -95,12 +104,15 @@
                     }
                 });
             }
+            form.on('switch(switchTest)', function (data) {
+                $("#EnableAll").val(this.checked);
+            });
             //监听提交
             form.on('submit(saveBtn)', function (data) {
                 if (data.field.Weigth < 1) {
                     layer.msg("权重值必须大于0", { icon: 5 });
                 }
-                common.ajax("/QLConfig", "post", data.field, function (data) {
+                common.ajax("/QLConfig", "post", JSON.stringify(data.field), function (data) {
                     var index = layer.msg("面板信息提交成功！", function (data) {
                         parent.document.location.reload();
                     })

@@ -142,9 +142,10 @@
                             key: 'token'
                             , value: e.Data
                         });
-                        layer.msg("登录成功，即将自动跳转。。。", { icon: 6 }, function () {
-                            window.location = '../index.html';
-                        });
+                        window.location = '../index.html';
+                        //layer.msg("登录成功，即将自动跳转。。。", { icon: 6 }, function () {
+                            
+                        //});
                     } else {
                         layer.msg(e.Message, { icon: 5 });
                     }

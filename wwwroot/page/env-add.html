@@ -15,21 +15,28 @@
 <body>
     <div class="layui-form layuimini-form">
         <div class="layui-form-item">
-            <label class="layui-form-label required">指令</label>
+            <label class="layui-form-label required">变量名称</label>
             <div class="layui-input-block">
-                <input type="text" id="Key" name="Key" lay-verify="required" lay-reqtext="指令不能为空" value="" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label required">回复消息</label>
-            <div class="layui-input-block">
-                <textarea id="Message" rows="12" name="Message" lay-verify="required" lay-reqtext="回复消息不能为空" value="" class="layui-textarea"></textarea>
+                <input type="text" id="Name" name="Name" class="layui-input" lay-verify="required" lay-reqtext="变量名称不能为空">
                 <input type="hidden" id="Id" name="Id">
+                <input type="hidden" id="Enable" name="Enable" value="true">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">值</label>
+            <div class="layui-input-block">
+                <input type="text" id="Value" name="Value" class="layui-input" lay-verify="required" lay-reqtext="变量值不能为空">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label ">备注</label>
+            <div class="layui-input-block">
+                <textarea id="Remark" name="Remark" class="layui-input"></textarea>
             </div>
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">保存</button>
             </div>
         </div>
     </div>
@@ -42,27 +49,22 @@
                 layer = layui.layer,
                 common = layui.common,
                 $ = layui.$;
-            //监听提交
-
-
 
             var id = common.queryString("id");
             if (id) {
-                common.ajax("/Command/" + id, "get", {}, function (data) {
+                common.ajax("/Task/" + id, "get", {}, function (data) {
                     if (data) {
-                        $("#Key").val(data.Key);
+                        $("#Name").val(data.Name);
+                        $("#Value").val(data.Value);
+                        $("#Remark").val(data.Remark);
                         $("#Id").val(data.Id);
-                        $("#Message").val(data.Message);
                     }
                 });
             }
-
+            //监听提交
             form.on('submit(saveBtn)', function (data) {
-                if (data.field.Weigth < 1) {
-                    layer.msg("权重值必须大于0", { icon: 5 });
-                }
-                common.ajax("/Command", "post", JSON.stringify(data.field), function (data) {
-                    var index = layer.msg("快捷回复提交成功！", function (data) {
+                common.ajax("/Env", "post", JSON.stringify(data.field), function (data) {
+                    var index = layer.msg("环境变量提交成功！", function (data) {
                         parent.document.location.reload();
                     })
                 });

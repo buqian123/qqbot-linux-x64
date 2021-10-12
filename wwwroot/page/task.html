@@ -12,6 +12,11 @@
 <body>
     <div class="layuimini-container">
         <div class="layuimini-main">
+            <script type="text/html" id="toolbarDemo">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
+                </div>
+            </script>
             <fieldset class="table-search-fieldset">
                 <legend>搜索信息</legend>
                 <div style="margin: 10px 10px 10px 10px">
@@ -21,12 +26,6 @@
                                 <label class="layui-form-label">关键字</label>
                                 <div class="layui-input-inline">
                                     <input type="text" id="Key" name="Key" autocomplete="off" class="layui-input">
-                                </div>
-                                <label class="layui-form-label">青龙面板</label>
-                                <div class="layui-input-inline">
-                                    <select id="ContainerId" name="ContainerId">
-                                        <option value="">全部</option>
-                                    </select>
                                 </div>
                             </div>
                             <div class="layui-inline">
@@ -38,7 +37,7 @@
             </fieldset>
             <script type="text/html" id="toolbarDemo">
                 <div class="layui-btn-container">
-                    <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="Sync"> Cookie同步 </button>
+                    <!--<button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="Sync"> Cookie同步 </button>-->
                 </div>
             </script>
 
@@ -59,7 +58,7 @@
                 common = layui.common,
                 table = layui.table;
             function initTable() {
-                common.ajax("/JDCookie", "get", { Key: $("#Key").val(), ContainerId: $("#ContainerId").val() }, function (data) {
+                common.ajax("/Task", "get", { Key: $("#Key").val() }, function (data) {
                     table.render({
                         elem: '#currentTableId',
                         toolbar: '#toolbarDemo',
@@ -70,43 +69,10 @@
                         }],
                         cols: [[
                             { type: "checkbox", width: 50 },
-                            { field: 'ContainerName', width: 120, title: '青龙容器', sort: true },
-                            {
-                                field: 'PTPin', title: 'Cookie', templet(d) {
-                                    return `pt_key=${d.PTKey};pt_pin=${d.PTPin};`;
-                                }
-                            },
-                            {
-                                field: 'QQ', title: 'QQ', sort: true, templet(d) {
-                                    if (d.QQ > 0) {
-                                        return d.QQ;
-                                    }
-                                    return "未绑定";
-                                }
-                            },
-                            {
-                                field: 'Priority', title: '权重', sort: true,
-                                width: 80
-                            },
-                            { field: 'nickname', title: '昵称' },
-                            {
-                                field: 'beanNum', title: '京豆', sort: true,
-                                width: 90
-                            },
-                            {
-                                field: 'Available', title: '可用', sort: true, templet(d) {
-                                    return d.Available ? "是" : "否";
-                                },
-                                width: 80
-                            },
-                            { field: 'levelName', title: '账号等级', sort: true },
-                            { field: 'CreateTime', title: '添加时间' },
-                            {
-                                field: 'Top', title: '置顶', sort: true, templet(d) {
-                                    return `<a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="top">${d.Top ? "取消" : "置顶"}</a>`
-                                },
-                                width: 80
-                            },
+                            { field: 'Name', title: '任务名称', sort: true },
+                            { field: 'Command', title: '执行命令', sort: true },
+                            { field: 'FileName', title: '执行脚本', sort: true },
+                            { field: 'MaxCount', title: '日限制次数', sort: true },
                             { title: '操作', minWidth: 120, toolbar: '#currentTableBar', align: "center" }
                         ]],
                         limits: [10, 15, 20, 25, 50, 100],
@@ -130,20 +96,23 @@
             table.on('checkbox(currentTableFilter)', function (obj) {
                 console.log(obj)
             });
-            common.ajax(`/QLConfig`, "get", {}, function (data) {
-                for (var i = 0; i < data.length; i++) {
-                    $("#ContainerId").append("<option value='" + data[i].Id + "'>" + data[i].Name + "</option>");
-                }
-                form.render();
-            });
 
             table.on('toolbar(currentTableFilter)', function (obj) {
-                if (obj.event === 'Sync') {  // 监听添加操作
-                    layer.confirm('确定重新同步Cookie信息吗？', function (index) {
-                        common.ajax(`/JDCookie/Sync`, "get", {}, function (data) {
-                            layer.msg("同步操作成功，请稍后刷新账号查看！", { icon: 6 });
-                        });
+                if (obj.event === 'add') {  // 监听添加操作
+                    var index = layer.open({
+                        title: '添加脚本指令',
+                        type: 2,
+                        shade: 0.2,
+                        area: ['50%', '60%'],
+                        content: 'task-add.html',
                     });
+                    $(window).on("resize", function () {
+                        layer.full(index);
+                    });
+                } else if (obj.event === 'delete') {  // 监听删除操作
+                    var checkStatus = table.checkStatus('currentTableId')
+                        , data = checkStatus.data;
+                    layer.alert(JSON.stringify(data));
                 }
             });
 
@@ -151,35 +120,25 @@
                 var data = obj.data;
                 if (obj.event === 'edit') {
                     var index = layer.open({
-                        title: '编辑Cookie',
+                        title: '编辑脚本指令',
                         type: 2,
                         shade: 0.2,
                         maxmin: true,
                         shadeClose: true,
-                        area: ['50%', '45%'],
-                        content: 'jdCookie-add.html?id=' + data.Id,
+                        area: ['50%', '60%'],
+                        content: 'task-add.html?id=' + data.Id,
                     });
                     $(window).on("resize", function () {
                         layer.full(index);
                     });
                     return false;
                 } else if (obj.event === 'delete') {
-                    layer.confirm('确定删除这个账号吗？', function (index) {
-                        common.ajax(`/JDCookie/` + data.Id, "delete", {}, function (data) {
+                    layer.confirm('确定删除该脚本指令吗？', function (index) {
+                        common.ajax(`/Task/` + data.Id, "delete", {}, function (data) {
                             layer.msg("删除成功！", { icon: 6 }, function () {
                                 obj.del();
                                 layer.close(index);
                             });
-                        });
-                    });
-                } else if (obj.event === 'top') {
-                    layer.confirm('真的要置顶吗？指定后所有容器中都会包含这个Cookie。', function (index) {
-                        common.ajax(`/JDCookie/top/${data.Id}/${!data.Top}`, "get", {}, function (data111) {
-                            var message = "置顶成功，开卡无忧！";
-                            if (data.Top) {
-                                message = "取消置顶完成！"
-                            }
-                            layer.msg(message + "若需生效，请同步Cookie操作。", { icon: 6 });
                         });
                     });
                 }

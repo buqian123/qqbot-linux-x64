@@ -54,14 +54,14 @@
                         <input type="text" name="ManagerQQ" lay-verify="required" lay-reqtext="管理QQ号码必填" placeholder="请输入机器人管理QQ号码" autocomplete="off" class="layui-input">
                     </div>
                 </div>
-                <div class="layui-form-item">
+                <!--<div class="layui-form-item">
                     <label class="layui-form-label">查询限制</label>
                     <div class="layui-input-block">
                         <input type="number" name="MaxQueryCount" lay-verify="required" lay-reqtext="单日最大查询" placeholder="输入单日每个QQ号查询的次数，0表示无限制" autocomplete="off" class="layui-input">
                         <div class="layui-form-mid layui-word-aux">
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <div class="layui-form-item">
                     <div class="layui-input-block">
                         <button class="layui-btn" lay-submit lay-filter="setting">提交</button>
@@ -92,7 +92,7 @@
             //监听提交
             form.on('submit(setting)', function (data) {
                 layer.confirm('确认重新配置系统？', function (index) {
-                    common.ajax("/SystemConfig", "post", data.field, function (data) {
+                    common.ajax("/SystemConfig", "post", JSON.stringify(data.field), function (data) {
                         if (data) {
                             layer.msg("系统配置生效！", { icon: 6 });
                         }

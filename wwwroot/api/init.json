@@ -40,6 +40,18 @@
           "target": "_self"
         },
         {
+          "title": "脚本指令",
+          "href": "page/task.html",
+          "icon": "fa fa-gears",
+          "target": "_self"
+        },
+        {
+          "title": "环境变量",
+          "href": "page/env.html",
+          "icon": "fa fa-gears",
+          "target": "_self"
+        },
+        {
           "title": "数据导入",
           "href": "page/importData.html",
           "icon": "fa fa-gears",

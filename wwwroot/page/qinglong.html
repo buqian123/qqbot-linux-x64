@@ -56,7 +56,13 @@
                                 return "******";
                             } },
                         { field: 'CookieCount', width: 90, title: 'CK数量' },
-                        { field: 'Weigth', title: '分配权重', minWidth: 90 },
+                        { field: 'Weigth', title: '权重' },
+                        {
+                            field: 'EnableAll', title: '全量', sort: true, templet(d) {
+                                return d.EnableAll ? "是" : "否";
+                            },
+                            width: 80
+                        },
                         { title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center" }
                     ]],
                     limits: [10, 15, 20, 25, 50, 100],
@@ -73,7 +79,7 @@
                         title: '添加青龙面板',
                         type: 2,
                         shade: 0.2,
-                        area: ['50%', '60%'],
+                        area: ['50%', '85%'],
                         content: '../page/qinglong-add.html',
                     });
                     $(window).on("resize", function () {
@@ -97,7 +103,7 @@
                         title: '编辑青龙面板',
                         type: 2,
                         shade: 0.2,
-                        area: ['50%', '80%'],
+                        area: ['50%', '85%'],
                         content: '../page/qinglong-add.html?id=' + data.Id,
                     });
                     $(window).on("resize", function () {

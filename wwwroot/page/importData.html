@@ -50,14 +50,35 @@
     <script src="../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
     <script src="../js/lay-config.js?v=2.0.0" charset="utf-8"></script>
     <script>
-        layui.use(['form', 'layedit', 'laydate',  "jquery", 'common'], function () {
+        layui.use(['form', 'layedit', 'laydate', "jquery", 'common'], function () {
             var form = layui.form
                 , layer = layui.layer,
                 $ = layui.jquery
-                , layedit = layui.layedit
                 , common = layui.common
+
+
+            var upload = layui.upload;
+
+            //执行实例
+            var uploadInst = upload.render({
+                elem: '#upload' //绑定元素
+                , url: '/api/upload' //上传接口
+                , accept: "flie"
+                , done: function (res) {
+                    debugger
+                    if (res.Code == 200) {
+                        $("#Address").val(res.Data.Path)
+                    } else {
+
+                    }
+                }, headers: { "Authorization": "Bearer " + layui.data("token").token }
+                , error: function () {
+                    //请求异常回调
+                }
+            });
+
             form.on('submit(importData)', function (data) {
-                common.ajax("/ImportDatabase", 'post', data.field, function () {
+                common.ajax("/ImportDatabase", 'post', JSON.stringify(data.field), function () {
                     layer.alert("数据导入成功！");
                 });
                 return false;

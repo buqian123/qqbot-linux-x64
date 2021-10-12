@@ -2,10 +2,11 @@ layui.define(['jquery', 'layer'], function (exports) {
     var $ = layui.jquery;
     var layer = layui.layer;
     var obj = {
-        ajax: function (url, type, data, callback) {
+        ajax: function (url, type, data, callback,contentType) {
             $.ajax({
                 url: "/api" + url,
                 type: type,
+                contentType:"application/json",
                 data: data,
                 beforeSend: function (request) {
                     request.setRequestHeader("Authorization", "Bearer " + layui.data("token").token);
