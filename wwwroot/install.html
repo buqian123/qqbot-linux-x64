@@ -89,12 +89,12 @@
                     return false;
                 }
                 layer.confirm('请确认您要提交的配置，如果数据库配置错误将无法启动。', function (index) {
-                    $.post("/api/install", JSON.stringify({
+                    $.post("/api/install", {
                         UserName: data.UserName,
                         PassWord: data.PassWord,
                         DBType: data.DBType,
                         DBAddress: data.DBAddress
-                    }), function (e) {
+                    }, function (e) {
                         if (e.Code == 200) {
                             var index = layer.msg('配置完成，请重新启动容器后访问！', function () {
                                 // 关闭弹出层
