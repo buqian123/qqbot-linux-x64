@@ -28,14 +28,6 @@
                                         <option value="">全部</option>
                                     </select>
                                 </div>
-                                <label class="layui-form-label">可用</label>
-                                <div class="layui-input-inline">
-                                    <select id="Available" name="Available">
-                                        <option value="">全部</option>
-                                        <option value="true">是</option>
-                                        <option value="false">否</option>
-                                    </select>
-                                </div>
                             </div>
                             <div class="layui-inline">
                                 <button type="submit" class="layui-btn layui-btn-primary" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
@@ -47,12 +39,11 @@
             <script type="text/html" id="toolbarDemo">
                 <div class="layui-btn-container">
                     <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="Sync"> Cookie同步 </button>
-                    <button class="layui-btn layui-btn-normal layui-btn-sm data-enable-btn" lay-event="enable"> 启用 </button>
-                    <button class="layui-btn layui-btn-normal layui-btn-sm data-disable-btn" lay-event="disable"> 禁用 </button>
-                    <button class="layui-btn layui-btn-danger layui-btn-sm data-delete-btn" lay-event="delete"> 删除 </button>
                 </div>
             </script>
+
             <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
             <script type="text/html" id="currentTableBar">
                 <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
                 <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
@@ -68,11 +59,7 @@
                 common = layui.common,
                 table = layui.table;
             function initTable() {
-                common.ajax("/JDCookie", "get", {
-                    Key: $("#Key").val(),
-                    ContainerId: $("#ContainerId").val(),
-                    Available: $("#Available").val()
-                }, function (data) {
+                common.ajax("/JDCookie", "get", { Key: $("#Key").val(), ContainerId: $("#ContainerId").val() }, function (data) {
                     table.render({
                         elem: '#currentTableId',
                         toolbar: '#toolbarDemo',
@@ -157,55 +144,9 @@
                             layer.msg("同步操作成功，请稍后刷新账号查看！", { icon: 6 });
                         });
                     });
-                } else if (obj.event === 'delete') {  // 监听删除操作
-                    var ids = getSelectId(".data-delete-btn")
-                    if (ids.length > 0) {
-                        layer.confirm('确定删除选中的账号吗？', function (index) {
-                            common.ajax(`/JDCookie/deletes`, "post", JSON.stringify(ids), function (data) {
-                                layer.msg("删除成功！", { icon: 6 }, function () {
-                                    obj.del();
-                                    layer.close(index);
-                                });
-                            });
-                        });
-                    }
-                } else if (obj.event === 'enable') {  // 监听删除操作
-                    var ids = getSelectId(".data-enable-btn")
-                    if (ids.length > 0) {
-                        layer.confirm('确定启用选中的账号吗？', function (index) {
-                            UpdateEnable(ids, true);
-                        });
-                    }
-                } else if (obj.event === 'disable') {  // 监听删除操作
-                    var ids = getSelectId(".data-disable-btn")
-                    if (ids.length > 0) {
-                        layer.confirm('确定禁用选中的账号吗？', function (index) {
-                            UpdateEnable(ids, false);
-                            layer.close(index);
-                        });
-                    }
                 }
             });
 
-            function UpdateEnable(ids, status) {
-                common.ajax(`/JDCookie/UpdateEnable/` + status, "post", JSON.stringify(ids), function (data) {
-                    initTable();
-                });
-            }
-
-            function getSelectId(select) {
-                var data = table.checkStatus('currentTableId').data;
-                var ids = [];
-                for (var i = 0; i < data.length; i++) {
-                    ids.push(data[i].Id);
-                }
-                if (ids.length == 0) {
-                    layer.tips('未勾选任何账号', select, {
-                        tips: 1
-                    });
-                }
-                return ids;
-            }
             table.on('tool(currentTableFilter)', function (obj) {
                 var data = obj.data;
                 if (obj.event === 'edit') {
