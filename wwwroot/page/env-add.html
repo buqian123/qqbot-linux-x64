@@ -31,7 +31,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label ">备注</label>
             <div class="layui-input-block">
-                <textarea id="Remark" name="Remark" class="layui-input"></textarea>
+                <textarea id="Remark" rows="3" name="Remark" class="layui-textarea"></textarea>
             </div>
         </div>
         <div class="layui-form-item">
@@ -52,7 +52,7 @@
 
             var id = common.queryString("id");
             if (id) {
-                common.ajax("/Task/" + id, "get", {}, function (data) {
+                common.ajax("/env/" + id, "get", {}, function (data) {
                     if (data) {
                         $("#Name").val(data.Name);
                         $("#Value").val(data.Value);
