@@ -23,6 +23,7 @@
                 </div>
                 <input type="hidden" id="Id" name="Id">
                 <input type="hidden" id="Enable" name="Enable" value="true">
+                <input type="hidden" id="EnableConc" name="EnableConc" value="false">
             </div>
         </div>
         <div class="layui-form-item">
@@ -47,6 +48,25 @@
                 <div class="layui-form-mid layui-word-aux">
                     限制一天内用户执行脚本次数，为0则不限制
                 </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">定时执行</label>
+            <div class="layui-input-block">
+                <input type="text" id="Cron" name="Cron" class="layui-input">
+                <div class="layui-form-mid layui-word-aux">
+                    暂未开放。
+                    <!--为空表示不自动执行 Cron表达式生成工具<a target="_blank" href="https://qqe2.com/cron">https://qqe2.com/cron</a>-->
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">并发</label>
+            <div class="layui-input-block">
+                <input type="checkbox" lay-skin="switch" id="EnableAlCK" lay-filter="switchTest" lay-text="开|关">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                请谨慎开启该功能
             </div>
         </div>
         <div class="layui-form-item">
@@ -76,9 +96,15 @@
                         $("#FileName").val(data.FileName);
                         $("#MaxCount").val(data.MaxCount);
                         $("#Id").val(data.Id);
+                        $("#Cron").val(data.Cron);
                     }
                 });
             }
+
+
+            form.on('switch(switchTest)', function (data) {
+                $("#EnableConc").val(this.checked);
+            });
 
             //执行实例
             upload.render({

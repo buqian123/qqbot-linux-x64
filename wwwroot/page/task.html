@@ -72,6 +72,12 @@
                             { field: 'Name', title: '任务名称', sort: true },
                             { field: 'Command', title: '执行命令', sort: true },
                             { field: 'FileName', title: '执行脚本', sort: true },
+                            { field: 'Cron', title: '定时执行', sort: true },
+                            {
+                                field: 'EnableConc', title: '并发执行', sort: true, templet(d) {
+                                    return d.EnableConc ? "是" : "否";
+                                },
+                            },
                             { field: 'MaxCount', title: '日限制次数', sort: true },
                             { title: '操作', minWidth: 120, toolbar: '#currentTableBar', align: "center" }
                         ]],
@@ -103,7 +109,7 @@
                         title: '添加脚本指令',
                         type: 2,
                         shade: 0.2,
-                        area: ['50%', '60%'],
+                        area: ['50%', '80%'],
                         content: 'task-add.html',
                     });
                     $(window).on("resize", function () {
@@ -125,7 +131,7 @@
                         shade: 0.2,
                         maxmin: true,
                         shadeClose: true,
-                        area: ['50%', '60%'],
+                        area: ['50%', '80%'],
                         content: 'task-add.html?id=' + data.Id,
                     });
                     $(window).on("resize", function () {
