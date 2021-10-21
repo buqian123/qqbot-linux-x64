@@ -74,8 +74,23 @@
                             { field: 'FileName', title: '执行脚本', sort: true },
                             { field: 'Cron', title: '定时执行', sort: true },
                             {
+                                field: 'Enable', title: '是否启用', sort: true, templet(d) {
+                                    return d.Enable ? "是" : "否";
+                                },
+                            },
+                            {
                                 field: 'EnableConc', title: '并发执行', sort: true, templet(d) {
                                     return d.EnableConc ? "是" : "否";
+                                },
+                            },
+                            {
+                                field: 'ExecAllCookie', title: '全量执行', sort: true, templet(d) {
+                                    return d.ExecAllCookie ? "是" : "否";
+                                },
+                            },
+                            {
+                                field: 'EnablePush', title: '允许通知', sort: true, templet(d) {
+                                    return d.EnablePush ? "是" : "否";
                                 },
                             },
                             { field: 'MaxCount', title: '日限制次数', sort: true },

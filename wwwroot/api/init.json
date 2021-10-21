@@ -18,7 +18,7 @@
         {
           "title": "账号管理",
           "href": "page/jdCookie.html",
-          "icon": "fa fa-window-maximize",
+          "icon": "fa fa-users",
           "target": "_self"
         },
         {
@@ -30,31 +30,31 @@
         {
           "title": "快捷回复",
           "href": "page/command.html",
-          "icon": "fa fa-window-maximize",
+          "icon": "fa fa-comments-o",
           "target": "_self"
         },
         {
           "title": "系统设置",
           "href": "page/setting.html",
-          "icon": "fa fa-gears",
+          "icon": "fa fa-cog",
           "target": "_self"
         },
         {
           "title": "脚本指令",
           "href": "page/task.html",
-          "icon": "fa fa-gears",
+          "icon": "fa fa-terminal",
           "target": "_self"
         },
         {
           "title": "环境变量",
           "href": "page/env.html",
-          "icon": "fa fa-gears",
+          "icon": "fa fa-envira",
           "target": "_self"
         },
         {
           "title": "数据导入",
           "href": "page/importData.html",
-          "icon": "fa fa-gears",
+          "icon": "fa fa-database",
           "target": "_self"
         }
       ]

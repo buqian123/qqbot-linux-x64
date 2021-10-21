@@ -13,17 +13,17 @@
     </style>
 </head>
 <body>
-    <div class="layui-form layuimini-form">
+    <form class="layui-form layuimini-form">
         <div class="layui-form-item">
             <label class="layui-form-label required">脚本名称</label>
             <div class="layui-input-block">
                 <input type="text" id="Name" name="Name" class="layui-input" lay-verify="required" lay-reqtext="脚本名称不能为空">
-                <div class="layui-form-mid layui-word-aux">
-                    脚本名称定义将发送给用户，如：开始执行“查询京东账户”任务
-                </div>
                 <input type="hidden" id="Id" name="Id">
-                <input type="hidden" id="Enable" name="Enable" value="true">
+                <input type="hidden" id="Enable" name="Enable" value="false">
+                <input type="hidden" id="ExecAllCookie" name="ExecAllCookie" value="false">
                 <input type="hidden" id="EnableConc" name="EnableConc" value="false">
+                <input type="hidden" id="EnablePush" name="EnablePush" value="false">
+
             </div>
         </div>
         <div class="layui-form-item">
@@ -51,22 +51,44 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">定时执行</label>
+            <label class="layui-form-label">定时执行  </label>
             <div class="layui-input-block">
                 <input type="text" id="Cron" name="Cron" class="layui-input">
                 <div class="layui-form-mid layui-word-aux">
-                    暂未开放。
-                    <!--为空表示不自动执行 Cron表达式生成工具<a target="_blank" href="https://qqe2.com/cron">https://qqe2.com/cron</a>-->
+                    为空表示不自动执行 ，定时执行表达式不可和青龙通用，Cron表达式生成工具<a target="_blank" href="https://qqe2.com/cron">https://qqe2.com/cron</a>
                 </div>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">并发</label>
-            <div class="layui-input-block">
-                <input type="checkbox" lay-skin="switch" id="EnableAlCK" lay-filter="switchTest" lay-text="开|关">
+            <label class="layui-form-label">
+                是否启用
+                <i class="layui-icon tips" style="color:forestgreen" data-title="该脚本的全局开关，禁用后该脚本不执行。">&#xe60b;</i>
+            </label>
+            <div class="layui-input-inline">
+                <input type="checkbox" lay-skin="switch" lay-filter="Enable_CKB" lay-text="启用|禁用">
             </div>
-            <div class="layui-form-mid layui-word-aux">
-                请谨慎开启该功能
+            <label class="layui-form-label">
+                脚本并发
+                <i class="layui-icon tips" style="color:forestgreen" data-title="谨慎开启，开启后将同时执行多个账号。">&#xe60b;</i>
+            </label>
+            <div class="layui-input-inline">
+                <input type="checkbox" lay-skin="switch" lay-filter="EnableConc_CKB" lay-text="启用|禁用">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                全量执行
+                <i class="layui-icon tips" style="color:forestgreen" data-title="开启后未绑定QQ的账号也会执行脚本">&#xe60b;</i>
+            </label>
+            <div class="layui-input-inline">
+                <input type="checkbox" lay-skin="switch" lay-filter="ExecAllCookie_CKB" lay-text="开启|关闭">
+            </div>
+            <label class="layui-form-label">
+                消息推送
+                <i class="layui-icon tips" style="color:forestgreen" data-title="开启后将把执行结果推送到绑定的QQ号">&#xe60b;</i>
+            </label>
+            <div class="layui-input-inline">
+                <input type="checkbox" lay-skin="switch" lay-filter="EnablePush_CKB" lay-text="开启|关闭">
             </div>
         </div>
         <div class="layui-form-item">
@@ -75,7 +97,7 @@
                 <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">保存</button>
             </div>
         </div>
-    </div>
+    </form>
     <script src="../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
     <script src="../js/lay-config.js"></script>
 
@@ -97,13 +119,51 @@
                         $("#MaxCount").val(data.MaxCount);
                         $("#Id").val(data.Id);
                         $("#Cron").val(data.Cron);
+                        if (data.EnableConc) {
+                            var node = $(`input[type="checkbox"][lay-filter^="EnableConc_CKB"]`);
+                            node[0].checked = true;
+                            $("#EnableConc").val(true);
+                        } if (data.ExecAllCookie) {
+                            var node = $(`input[type="checkbox"][lay-filter^="ExecAllCookie_CKB"]`);
+                            node[0].checked = true;
+                            $("#ExecAllCookie").val(true);
+                        } if (data.Enable) {
+                            var node = $(`input[type="checkbox"][lay-filter^="Enable_CKB"]`);
+                            node[0].checked = true;
+                            $("#Enable").val(true);
+                        }
+                        if (data.EnablePush) {
+                            var node = $(`input[type="checkbox"][lay-filter^="EnablePush_CKB"]`);
+                            node[0].checked = true;
+                            $("#EnablePush").val(true);
+                        }
+
+                        form.render();
                     }
                 });
             }
 
+            $(".tips").click((obj) => {
+                obj = obj.target;
+                var title = $(obj).data("title")
+                if (title) {
+                    layer.tips(title, $(obj), {
+                        tips: 1
+                    });
+                }
+            })
 
-            form.on('switch(switchTest)', function (data) {
+            form.on('switch(ExecAllCookie_CKB)', function (data) {
+                $("#ExecAllCookie").val(this.checked);
+            });
+            form.on('switch(Enable_CKB)', function (data) {
+                $("#Enable").val(this.checked);
+            });
+            form.on('switch(EnableConc_CKB)', function (data) {
                 $("#EnableConc").val(this.checked);
+            });
+            form.on('switch(EnablePush_CKB)', function (data) {
+                $("#EnablePush").val(this.checked);
             });
 
             //执行实例
@@ -127,9 +187,7 @@
             //监听提交
             form.on('submit(saveBtn)', function (data) {
                 common.ajax("/Task", "post", JSON.stringify(data.field), function (data) {
-                    var index = layer.msg("脚本指令提交成功！", function (data) {
-                        parent.document.location.reload();
-                    })
+                    parent.document.location.reload();
                 });
                 return false;
             });

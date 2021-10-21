@@ -64,9 +64,7 @@
             //监听提交
             form.on('submit(saveBtn)', function (data) {
                 common.ajax("/Env", "post", JSON.stringify(data.field), function (data) {
-                    var index = layer.msg("环境变量提交成功！", function (data) {
-                        parent.document.location.reload();
-                    })
+                    parent.document.location.reload();
                 });
                 return false;
             });

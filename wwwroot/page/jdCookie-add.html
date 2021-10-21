@@ -72,10 +72,7 @@
                     layer.msg("权重值必须大于0", { icon: 5 });
                 }
                 common.ajax("/JDCookie", "post", JSON.stringify(data.field), function (data) {
-                    var index = layer.msg("Cookie信息提交成功！", function (data) {
-                        parent.document.location.reload();
-
-                    })
+                    parent.document.location.reload();
                 });
                 return false;
             });
