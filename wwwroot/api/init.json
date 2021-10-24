@@ -52,6 +52,12 @@
           "target": "_self"
         },
         {
+          "title": "青龙任务",
+          "href": "page/qltask.html",
+          "icon": "fa fa-envira",
+          "target": "_self"
+        },
+        {
           "title": "数据导入",
           "href": "page/importData.html",
           "icon": "fa fa-database",

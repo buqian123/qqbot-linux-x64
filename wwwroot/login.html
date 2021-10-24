@@ -152,7 +152,7 @@
                         shadeClose: true,
                         shade: false,
                         maxmin: true, //开启最大化最小化按钮
-                        area: ['800px', '600px'],
+                        area: ['800px', '680px'],
                         content: 'install.html'
                     });
                 }
@@ -160,9 +160,6 @@
             $.get("/api/Login/Version", function (data) {
                 document.getElementById("version").innerHTML = data.Data;
             })
-
-
-
             // 进行登录操作
             form.on('submit(login)', function (data) {
                 data = data.field;
@@ -183,9 +180,6 @@
                             , value: e.Data
                         });
                         window.location = '../index.html';
-                        //layer.msg("登录成功，即将自动跳转。。。", { icon: 6 }, function () {
-
-                        //});
                     } else {
                         layer.msg(e.Message, { icon: 5 });
                     }

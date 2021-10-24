@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <script src="../js/vue.min.js"></script>
+    <link href="../iview/iview.css" rel="stylesheet" />
+    <style>
+        body { background-color: #ffffff; }
+    </style>
+</head>
+<body>
+    <i-form id="Update-QLTask" style=" padding:25px;" :label-width="100">
+        <form-item label="任务名称">
+            <i-input type="text" v-model="name">
+            </i-input>
+        </form-item>
+        <form-item label="任务命令">
+            <i-input type="text" v-model="command">
+            </i-input>
+        </form-item>
+
+        <form-item :label="data.QLName+'配置'" v-for="data in QLTasks">
+            <i-input type="text" v-model="data.schedule">
+                <span slot="append"><input type="checkbox" v-model="!data.isDisable"></span>
+            </i-input>
+
+        </form-item>
+        <form-item>
+            <i-button type="primary" style="float:right">保存</i-button>
+        </form-item>
+    </i-form>
+    <!--<form id="Update-QLTask" style=" padding:25px;">
+        <div class="form-group row">
+            <div class="input-group col-sm-12">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">任务名称</span>
+                </div>
+                <input type="text" id="name" v-model="name" name="name" class="form-control">
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="input-group col-sm-12">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">任务命令</span>
+                </div>
+                <input type="text" id="command" v-model="command" name="command" class="form-control">
+            </div>
+        </div>
+        <div class="form-group row" v-for="data in QLTasks">
+            <div class="input-group col-sm-12">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">{{data.QLName}}任务配置</span>
+                </div>
+                <input type="text" v-model="data.schedule" class="form-control" >
+                <div class="input-group-text" id="button-addon4">
+                    <input type="checkbox" v-model="!data.isDisable">
+                </div>-->
+    <!--<div class="input-group-append" id="button-addon4">
+        <button class="btn btn-outline-secondary" type="button">Button</button>
+        <button class="btn btn-outline-secondary" type="button">Button</button>
+    </div>-->
+    <!--</div>
+        </div>
+            <button type="button" style="float:right" class="btn btn-primary">保存</button>
+    </form>-->
+    <script src="../iview/iview.min.js"></script>
+</body>
+</html>
+<script>
+    var app2 = new Vue({
+        el: '#Update-QLTask',
+        data: {
+            QLTasks: [],
+            command: null,
+            name: null
+        }
+    });
+    var update = JSON.parse(localStorage.getItem("UpdateQLTask")).UpdateQLTask;
+    app2.command = update.command;
+    app2.name = update.name;
+    app2.QLTasks = update.QLTasks;
+</script>
