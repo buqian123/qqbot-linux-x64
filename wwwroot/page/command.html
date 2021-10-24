@@ -36,25 +36,28 @@
                 common = layui.common,
                 table = layui.table;
 
-            common.ajax("/Command", "get", {}, function (data) {
-                table.render({
-                    elem: '#currentTableId',
-                    toolbar: '#toolbarDemo',
-                    defaultToolbar: ['filter', 'exports'],
-                    cols: [[
-                        { type: "checkbox", width: 50 },
-                        { field: 'Key', width: 120, title: '指令', sort: true },
-                        { field: 'Message', title: '回复内容' },
-                        { title: '操作', width: 120, toolbar: '#currentTableBar', align: "center" }
-                    ]],
-                    limits: [10, 15, 20, 25, 50, 100],
-                    limit: 15,
-                    page: true,
-                    skin: 'line',
-                    data: data,
-                    size: "lg"
-                });
-            })
+            var initTable = function () {
+                common.ajax("/Command", "get", {}, function (data) {
+                    table.render({
+                        elem: '#currentTableId',
+                        toolbar: '#toolbarDemo',
+                        defaultToolbar: ['filter', 'exports'],
+                        cols: [[
+                            { type: "checkbox", width: 50 },
+                            { field: 'Key', width: 120, title: '指令', sort: true },
+                            { field: 'Message', title: '回复内容' },
+                            { title: '操作', width: 120, toolbar: '#currentTableBar', align: "center" }
+                        ]],
+                        limits: [10, 15, 20, 25, 50, 100],
+                        limit: 15,
+                        page: true,
+                        skin: 'line',
+                        data: data,
+                        size: "lg"
+                    });
+                })
+            }
+            initTable();
 
             /**
              * toolbar监听事件
@@ -76,6 +79,7 @@
                     shade: 0.2,
                     area: ['50%', '60%'],
                     content: '../page/command-add.html?id=' + (type == "编辑" ? obj.data.Id : ""),
+                    end: initTable
                 });
                 $(window).on("resize", function () {
                     layer.full(index);

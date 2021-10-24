@@ -6,81 +6,117 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <script src="../js/vue.min.js"></script>
+    <script src="../vue/vue.min.js"></script>
     <link href="../iview/iview.css" rel="stylesheet" />
     <style>
         body { background-color: #ffffff; }
     </style>
 </head>
 <body>
-    <i-form id="Update-QLTask" style=" padding:25px;" :label-width="100">
-        <form-item label="任务名称">
-            <i-input type="text" v-model="name">
+    <i-form ref="UpdateQLTask" id="Update-QLTask" :model="UpdateQLTask" style=" padding:25px;" :label-width="100" :rules="ruleInline">
+        <Divider>任务基础配置</Divider>
+        <form-item label="任务名称" prop="name">
+            <i-input type="text" name="name" v-model="UpdateQLTask.name">
             </i-input>
         </form-item>
-        <form-item label="任务命令">
-            <i-input type="text" v-model="command">
+        <form-item label="任务命令" prop="command">
+            <i-input type="text" name="command" v-model="UpdateQLTask.command">
             </i-input>
         </form-item>
-
-        <form-item :label="data.QLName+'配置'" v-for="data in QLTasks">
-            <i-input type="text" v-model="data.schedule">
-                <span slot="append"><input type="checkbox" v-model="!data.isDisable"></span>
+        <form-item label="定时调度" prop="schedule">
+            <i-input type="text" name="schedule" v-model="UpdateQLTask.schedule">
             </i-input>
-
+        </form-item>
+        <Divider>青龙容器详细配置</Divider>
+        <form-item :label="data.QLName" v-for="(data,i) in UpdateQLTask.QLTasks">
+            <i-input type="text" placeholder="不填定时执行表达式则默认使用基础配置" name="schedule" v-model="data.schedule">
+                <span slot="prepend">调度表达式</span>
+                <span slot="append">
+                    <input type="checkbox" :id="'isDisable'+i" v-model="!data.isDisable">
+                    <label :for="'isDisable'+i">启用</label>
+                </span>
+            </i-input>
         </form-item>
         <form-item>
-            <i-button type="primary" style="float:right">保存</i-button>
+            <i-button type="primary" @click="handleSubmit('UpdateQLTask')" style="float:right">保存</i-button>
         </form-item>
     </i-form>
-    <!--<form id="Update-QLTask" style=" padding:25px;">
-        <div class="form-group row">
-            <div class="input-group col-sm-12">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">任务名称</span>
-                </div>
-                <input type="text" id="name" v-model="name" name="name" class="form-control">
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="input-group col-sm-12">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">任务命令</span>
-                </div>
-                <input type="text" id="command" v-model="command" name="command" class="form-control">
-            </div>
-        </div>
-        <div class="form-group row" v-for="data in QLTasks">
-            <div class="input-group col-sm-12">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">{{data.QLName}}任务配置</span>
-                </div>
-                <input type="text" v-model="data.schedule" class="form-control" >
-                <div class="input-group-text" id="button-addon4">
-                    <input type="checkbox" v-model="!data.isDisable">
-                </div>-->
-    <!--<div class="input-group-append" id="button-addon4">
-        <button class="btn btn-outline-secondary" type="button">Button</button>
-        <button class="btn btn-outline-secondary" type="button">Button</button>
-    </div>-->
-    <!--</div>
-        </div>
-            <button type="button" style="float:right" class="btn btn-primary">保存</button>
-    </form>-->
     <script src="../iview/iview.min.js"></script>
+    <script src="../vue/axios.min.js"></script>
 </body>
 </html>
 <script>
     var app2 = new Vue({
         el: '#Update-QLTask',
         data: {
-            QLTasks: [],
-            command: null,
-            name: null
+            UpdateQLTask: {},
+            ruleInline: {
+                name: [
+                    { required: true, message: '任务名称不能为空', trigger: 'blur' }
+                ],
+                command: [
+                    { required: true, message: '任务命令不能为空', trigger: 'blur' }
+                ],
+                schedule: [
+                    { required: true, message: '任务定时执行表达式不能为空', trigger: 'blur' },
+                    {
+                        validator: (rule, value, callback) => {
+                            if (!app2.validateCron(value)) {
+                                callback(new Error('定时调度表达式验证失败'))
+                            }
+                            return callback();
+                        }, message: '定时调度表达式验证失败', trigger: 'blur'
+                    }
+                ]
+            }
+        },
+        methods: {
+            validateCron(cron) {
+                var re = new RegExp("^\\s*($|#|\\w+\\s*=|(\\?|\\*|(?:[0-5]?\\d)(?:(?:-|\/|\\,)(?:[0-5]?\\d))?(?:,(?:[0-5]?\\d)(?:(?:-|\/|\\,)(?:[0-5]?\\d))?)*)\\s+(\\?|\\*|(?:[01]?\\d|2[0-3])(?:(?:-|\/|\\,)(?:[01]?\\d|2[0-3]))?(?:,(?:[01]?\\d|2[0-3])(?:(?:-|\/|\\,)(?:[01]?\\d|2[0-3]))?)*)\\s+(\\?|\\*|(?:0?[1-9]|[12]\\d|3[01])(?:(?:-|\/|\\,)(?:0?[1-9]|[12]\\d|3[01]))?(?:,(?:0?[1-9]|[12]\\d|3[01])(?:(?:-|\/|\\,)(?:0?[1-9]|[12]\\d|3[01]))?)*)\\s+(\\?|\\*|(?:[1-9]|1[012])(?:(?:-|\/|\\,)(?:[1-9]|1[012]))?(?:L|W)?(?:,(?:[1-9]|1[012])(?:(?:-|\/|\\,)(?:[1-9]|1[012]))?(?:L|W)?)*|\\?|\\*|(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)(?:(?:-)(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC))?(?:,(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)(?:(?:-)(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC))?)*)\\s+(\\?|\\*|(?:[0-6])(?:(?:-|\/|\\,|#)(?:[0-6]))?(?:L)?(?:,(?:[0-6])(?:(?:-|\/|\\,|#)(?:[0-6]))?(?:L)?)*|\\?|\\*|(?:MON|TUE|WED|THU|FRI|SAT|SUN)(?:(?:-)(?:MON|TUE|WED|THU|FRI|SAT|SUN))?(?:,(?:MON|TUE|WED|THU|FRI|SAT|SUN)(?:(?:-)(?:MON|TUE|WED|THU|FRI|SAT|SUN))?)*)(|\\s)+(\\?|\\*|(?:|\\d{4})(?:(?:-|\/|\\,)(?:|\\d{4}))?(?:,(?:|\\d{4})(?:(?:-|\/|\\,)(?:|\\d{4}))?)*))$");
+                return re.test(cron)
+            },
+            handleSubmit(name) {
+                this.$refs[name].validate((valid) => {
+                    for (var i = 0; i < this.UpdateQLTask.QLTasks.length; i++) {
+                        var cron = this.UpdateQLTask.QLTasks[i].schedule;
+                        if (!cron) {
+                            this.UpdateQLTask.QLTasks[i].schedule = this.UpdateQLTask.schedule;
+                        }
+                        else if (!this.validateCron(cron)) {
+                            this.$Notice.error({
+                                title: '表单验证失败',
+                                desc: '验证' + this.UpdateQLTask.QLTasks[i].QLName + '定时调度表达式验证失败，请检查配置后重新提交！'
+                            });
+                            return;
+                        }
+                    }
+                    if (valid) {
+                        this.$Modal.confirm({
+                            title: '提交确认',
+                            content: '确定提交修改的任务信息吗？',
+                            okText: '确定',
+                            cancelText: '取消', onOk: () => {
+                                axios.put('/api/QLTask/update', this.UpdateQLTask)
+                                    .then(function (response) {
+                                        parent.layer.closeAll();
+                                    })
+                                    .catch(function (error) {
+                                        console.log(error);
+                                    });
+                            }
+                        });
+                    } else {
+                        this.$Notice.error({
+                            title: '表单验证失败',
+                            desc: '验证青龙任务信息失败，请检查配置后重新提交！'
+                        });
+                    }
+                })
+            }
+        },
+        mounted() {
+            var update = JSON.parse(localStorage.getItem("UpdateQLTask")).UpdateQLTask;
+            this.UpdateQLTask = update;
         }
     });
-    var update = JSON.parse(localStorage.getItem("UpdateQLTask")).UpdateQLTask;
-    app2.command = update.command;
-    app2.name = update.name;
-    app2.QLTasks = update.QLTasks;
 </script>

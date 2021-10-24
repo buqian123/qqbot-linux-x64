@@ -62,7 +62,7 @@
                     layer.msg("权重值必须大于0", { icon: 5 });
                 }
                 common.ajax("/Command", "post", JSON.stringify(data.field), function (data) {
-                    parent.document.location.reload();
+                    parent.layer.closeAll();
                 });
                 return false;
             });

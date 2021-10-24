@@ -217,6 +217,7 @@
                         shadeClose: true,
                         area: ['50%', '45%'],
                         content: 'jdCookie-add.html?id=' + data.Id,
+                        end: initTable
                     });
                     $(window).on("resize", function () {
                         layer.full(index);
@@ -226,19 +227,20 @@
                     layer.confirm('确定删除这个账号吗？', function (index) {
                         common.ajax(`/JDCookie/` + data.Id, "delete", {}, function (data) {
                             layer.msg("删除成功！", { icon: 6 }, function () {
-                                obj.del();
+                                initTable();
                                 layer.close(index);
                             });
                         });
                     });
                 } else if (obj.event === 'top') {
-                    layer.confirm('真的要置顶吗？指定后所有容器中都会包含这个Cookie。', function (index) {
+                    layer.confirm('真的要' + (data.Top ? "置顶" : "取消置顶") + '吗？', function (index) {
                         common.ajax(`/JDCookie/top/${data.Id}/${!data.Top}`, "get", {}, function (data111) {
                             var message = "置顶成功，开卡无忧！";
                             if (data.Top) {
                                 message = "取消置顶完成！"
                             }
-                            layer.msg(message + "若需生效，请同步Cookie操作。", { icon: 6 });
+                            layer.msg(message, { icon: 6 });
+                            initTable();
                         });
                     });
                 }

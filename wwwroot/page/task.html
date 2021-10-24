@@ -126,6 +126,7 @@
                         shade: 0.2,
                         area: ['50%', '80%'],
                         content: 'task-add.html',
+                        end: initTable
                     });
                     $(window).on("resize", function () {
                         layer.full(index);
@@ -148,6 +149,7 @@
                         shadeClose: true,
                         area: ['50%', '80%'],
                         content: 'task-add.html?id=' + data.Id,
+                        end: initTable
                     });
                     $(window).on("resize", function () {
                         layer.full(index);

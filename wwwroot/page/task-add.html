@@ -187,7 +187,7 @@
             //监听提交
             form.on('submit(saveBtn)', function (data) {
                 common.ajax("/Task", "post", JSON.stringify(data.field), function (data) {
-                    parent.document.location.reload();
+                    parent.layer.closeAll();
                 });
                 return false;
             });
