@@ -17,7 +17,7 @@
         <div class="layuimini-main">
             <script type="text/html" id="toolbarDemo">
                 <div class="layui-btn-container">
-                    <!--<button class="layui-btn  layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>-->
+                    <button class="layui-btn  layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
                     <button class="layui-btn layui-btn-normal layui-btn-sm data-run-btn" lay-event="run"> 运行 </button>
                     <button class="layui-btn layui-btn-danger layui-btn-sm data-run-btn" lay-event="stop"> 停止 </button>
                     <button class="layui-btn layui-btn-normal layui-btn-sm data-run-btn" lay-event="enable"> 启用 </button>
@@ -201,7 +201,7 @@ ${(d.QLTasks[i].isDisabled == 1) ? "禁用" : "启用"}
                 var checkStatus = table.checkStatus('currentTableId')
                     , datas = checkStatus.data;
 
-                if (!datas || datas.length == 0) {
+                if (obj.event != "add" && (!datas || datas.length == 0)) {
                     layer.msg("未勾选任何任务。", { icon: 5 });
                     return;
                 }
@@ -231,6 +231,17 @@ ${(d.QLTasks[i].isDisabled == 1) ? "禁用" : "启用"}
                     }
                     layer.confirm(`确定${op}选中的任务吗？`, function (index) {
                         runStatus(lists, obj.event, `${op}选中任务的所有青龙任务操作完成！`, (obj.event === "delete" ? "delete" : "post"));
+                    });
+                } else if (obj.event == "add") {
+                    layer.open({
+                        title: '添加青龙任务',
+                        type: 2,
+                        shade: 0.2,
+                        area: ['600px', '500px'],
+                        content: 'qltask-add.html',
+                        end: function () {
+                            initTable();
+                        }
                     });
                 }
             });

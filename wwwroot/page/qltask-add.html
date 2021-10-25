@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <script src="../vue/vue.min.js"></script>
+    <link href="../iview/iview.css" rel="stylesheet" />
+    <style>
+        body { background-color: #ffffff; }
+    </style>
+</head>
+<body>
+    <i-form ref="AddQLTask" id="Add-QLTask" :model="AddQLTask" style=" padding:25px;" :label-width="100" :rules="ruleInline">
+        <form-item label="任务名称" prop="name">
+            <i-input type="text" name="name" v-model="AddQLTask.name">
+            </i-input>
+        </form-item>
+        <form-item label="任务命令" prop="command">
+            <i-input type="text" name="command" v-model="AddQLTask.command">
+            </i-input>
+        </form-item>
+        <form-item label="定时调度" prop="schedule">
+            <i-input type="text" name="schedule" v-model="AddQLTask.schedule">
+            </i-input>
+        </form-item>
+        <form-item label="脚本文件">
+            <Upload :show-upload-list="false" :on-success="onSuccess" action="/api/Upload/scripts" :headers="UploadHeaders">
+                <i-button icon="ios-cloud-upload-outline">上传文件</i-button>
+            </Upload>
+        </form-item>
+        <form-item label="容器选择">
+            <div v-for="(data,i) in AddQLTask.QLConfigs" style="float:left;margin-right:15px;">
+                <input type="checkbox" :id="'Enable'+i" v-model="data.Enable">
+                <label :for="'Enable'+i">{{data.QLName}}启用</label>
+            </div>
+        </form-item>
+        <form-item>
+            <i-button type="primary" @click="handleSubmit('AddQLTask')" style="float:right">保存</i-button>
+        </form-item>
+    </i-form>
+    <script src="../iview/iview.min.js"></script>
+    <script src="../vue/axios.min.js"></script>
+</body>
+</html>
+<script>
+    var app2 = new Vue({
+        el: '#Add-QLTask',
+        data: {
+            AddQLTask: {
+                QLConfigs: [],
+                name: "",
+                schedule: "",
+                command: "",
+                File: ""
+            },
+            UploadHeaders: {},
+            ruleInline: {
+                name: [
+                    { required: true, message: '任务名称不能为空', trigger: 'blur' }
+                ],
+                command: [
+                    { required: true, message: '任务命令不能为空', trigger: 'blur' }
+                ],
+                schedule: [
+                    { required: true, message: '任务定时执行表达式不能为空', trigger: 'blur' },
+                    {
+                        validator: (rule, value, callback) => {
+                            if (!app2.validateCron(value)) {
+                                callback(new Error('定时调度表达式验证失败'))
+                            }
+                            return callback();
+                        }, message: '定时调度表达式验证失败', trigger: 'blur'
+                    }
+                ]
+            }
+        },
+        methods: {
+            validateCron(cron) {
+                var re = new RegExp("^\\s*($|#|\\w+\\s*=|(\\?|\\*|(?:[0-5]?\\d)(?:(?:-|\/|\\,)(?:[0-5]?\\d))?(?:,(?:[0-5]?\\d)(?:(?:-|\/|\\,)(?:[0-5]?\\d))?)*)\\s+(\\?|\\*|(?:[01]?\\d|2[0-3])(?:(?:-|\/|\\,)(?:[01]?\\d|2[0-3]))?(?:,(?:[01]?\\d|2[0-3])(?:(?:-|\/|\\,)(?:[01]?\\d|2[0-3]))?)*)\\s+(\\?|\\*|(?:0?[1-9]|[12]\\d|3[01])(?:(?:-|\/|\\,)(?:0?[1-9]|[12]\\d|3[01]))?(?:,(?:0?[1-9]|[12]\\d|3[01])(?:(?:-|\/|\\,)(?:0?[1-9]|[12]\\d|3[01]))?)*)\\s+(\\?|\\*|(?:[1-9]|1[012])(?:(?:-|\/|\\,)(?:[1-9]|1[012]))?(?:L|W)?(?:,(?:[1-9]|1[012])(?:(?:-|\/|\\,)(?:[1-9]|1[012]))?(?:L|W)?)*|\\?|\\*|(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)(?:(?:-)(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC))?(?:,(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)(?:(?:-)(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC))?)*)\\s+(\\?|\\*|(?:[0-6])(?:(?:-|\/|\\,|#)(?:[0-6]))?(?:L)?(?:,(?:[0-6])(?:(?:-|\/|\\,|#)(?:[0-6]))?(?:L)?)*|\\?|\\*|(?:MON|TUE|WED|THU|FRI|SAT|SUN)(?:(?:-)(?:MON|TUE|WED|THU|FRI|SAT|SUN))?(?:,(?:MON|TUE|WED|THU|FRI|SAT|SUN)(?:(?:-)(?:MON|TUE|WED|THU|FRI|SAT|SUN))?)*)(|\\s)+(\\?|\\*|(?:|\\d{4})(?:(?:-|\/|\\,)(?:|\\d{4}))?(?:,(?:|\\d{4})(?:(?:-|\/|\\,)(?:|\\d{4}))?)*))$");
+                return re.test(cron)
+            },
+            onSuccess(res, file, fileList) {
+                app2.AddQLTask.command = "task " + file.name;
+                app2.AddQLTask.File = file.name;
+                console.log(app2.AddQLTask)
+            },
+            handleSubmit(name) {
+                this.$refs[name].validate((valid) => {
+                    this.AddQLTask.QLTasks = [];
+                    for (var i = 0; i < this.AddQLTask.QLConfigs.length; i++) {
+                        if (this.AddQLTask.QLConfigs[i].Enable) {
+                            this.AddQLTask.QLTasks.push({ QLId: this.AddQLTask.QLConfigs[i].QLId });
+                        }
+                    }
+                    if (this.AddQLTask.QLTasks.length == 0) {
+                        this.$Notice.error({
+                            title: '数据错误',
+                            desc: '未选择配置任何容器！'
+                        });
+                    }
+                    if (valid) {
+                        this.$Modal.confirm({
+                            title: '提交确认',
+                            content: '确定提交修改的任务信息吗？',
+                            okText: '确定',
+                            cancelText: '取消',
+                            onOk: () => {
+                                axios.post('/api/QLTask/add', this.AddQLTask)
+                                    .then(function (response) {
+                                        parent.layer.closeAll();
+                                    })
+                                    .catch(function (error) {
+                                        console.log(error);
+                                    });
+                            }
+                        });
+                    } else {
+                        this.$Notice.error({
+                            title: '表单验证失败',
+                            desc: '验证青龙任务信息失败，请检查配置后重新提交！'
+                        });
+                    }
+                })
+            }
+        },
+        mounted() {
+            this.UploadHeaders.Authorization = "Bearer " + JSON.parse(localStorage.getItem("token"))?.token;
+            axios.get('/api/QLConfig')
+                .then(function (response) {
+                    for (var i = 0; i < response.length; i++) {
+                        app2.AddQLTask.QLConfigs.push({
+                            QLId: response[i].Id,
+                            QLName: response[i].Name,
+                            Enable: true
+                        })
+                    }
+                })
+                .catch(function (error) {
+                    app2.$Notice.error({
+                        title: '请求错误',
+                        desc: error
+                    })
+                });
+        }
+    });
+</script>
