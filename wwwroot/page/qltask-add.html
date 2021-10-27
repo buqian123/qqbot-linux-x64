@@ -32,7 +32,7 @@
             </Upload>
         </form-item>
         <form-item label="容器选择">
-            <div v-for="(data,i) in AddQLTask.QLConfigs" style="float:left;margin-right:15px;">
+            <div v-for="(data,i) in AddQLTask.QLPanels" style="float:left;margin-right:15px;">
                 <input type="checkbox" :id="'Enable'+i" v-model="data.Enable">
                 <label :for="'Enable'+i">{{data.QLName}}启用</label>
             </div>
@@ -50,7 +50,7 @@
         el: '#Add-QLTask',
         data: {
             AddQLTask: {
-                QLConfigs: [],
+                QLPanels: [],
                 name: "",
                 schedule: "",
                 command: "",
@@ -90,9 +90,9 @@
             handleSubmit(name) {
                 this.$refs[name].validate((valid) => {
                     this.AddQLTask.QLTasks = [];
-                    for (var i = 0; i < this.AddQLTask.QLConfigs.length; i++) {
-                        if (this.AddQLTask.QLConfigs[i].Enable) {
-                            this.AddQLTask.QLTasks.push({ QLId: this.AddQLTask.QLConfigs[i].QLId });
+                    for (var i = 0; i < this.AddQLTask.QLPanels.length; i++) {
+                        if (this.AddQLTask.QLPanels[i].Enable) {
+                            this.AddQLTask.QLTasks.push({ QLId: this.AddQLTask.QLPanels[i].QLId });
                         }
                     }
                     if (this.AddQLTask.QLTasks.length == 0) {
@@ -128,10 +128,10 @@
         },
         mounted() {
             this.UploadHeaders.Authorization = "Bearer " + JSON.parse(localStorage.getItem("token"))?.token;
-            axios.get('/api/QLConfig')
+            axios.get('/api/QLPanel')
                 .then(function (response) {
                     for (var i = 0; i < response.length; i++) {
-                        app2.AddQLTask.QLConfigs.push({
+                        app2.AddQLTask.QLPanels.push({
                             QLId: response[i].Id,
                             QLName: response[i].Name,
                             Enable: true

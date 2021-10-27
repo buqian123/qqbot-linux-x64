@@ -33,7 +33,7 @@
                 common = layui.common,
                 table = layui.table;
 
-            common.ajax("/QLConfig", "get", {}, function (data) {
+            common.ajax("/QLPanel", "get", {}, function (data) {
 
                 table.render({
                     elem: '#currentTableId',
@@ -112,7 +112,7 @@
                 } else if (obj.event === 'delete') {
                     layer.confirm('真的要删除吗？删除后QQBot中对应的Cookie将同步删除，且无法恢复！', function (index) {
                         obj.del();
-                        common.ajax("/QLConfig/" + data.Id, "delete", {}, function () {
+                        common.ajax("/QLPanel/" + data.Id, "delete", {}, function () {
                             layer.msg("删除成功。", { icon: 6 });
                             layer.close(index);
                         })

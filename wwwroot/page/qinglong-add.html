@@ -91,7 +91,7 @@
 
             var id = common.queryString("id");
             if (id) {
-                common.ajax("/QLConfig/" + id, "get", {}, function (data) {
+                common.ajax("/QLPanel/" + id, "get", {}, function (data) {
                     if (data) {
                         $("#UserName").val(data.UserName);
                         $("#Name").val(data.Name);
@@ -118,7 +118,7 @@
                 if (data.field.Weigth < 1) {
                     layer.msg("权重值必须大于0", { icon: 5 });
                 }
-                common.ajax("/QLConfig", "post", JSON.stringify(data.field), function (data) {
+                common.ajax("/QLPanel", "post", JSON.stringify(data.field), function (data) {
                     parent.document.location.reload();
                 });
                 return false;

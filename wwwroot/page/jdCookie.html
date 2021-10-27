@@ -143,7 +143,7 @@
             table.on('checkbox(currentTableFilter)', function (obj) {
                 console.log(obj)
             });
-            common.ajax(`/QLConfig`, "get", {}, function (data) {
+            common.ajax(`/QLPanel`, "get", {}, function (data) {
                 for (var i = 0; i < data.length; i++) {
                     $("#ContainerId").append("<option value='" + data[i].Id + "'>" + data[i].Name + "</option>");
                 }

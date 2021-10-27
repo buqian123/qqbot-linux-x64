@@ -17,7 +17,7 @@
         <div class="layuimini-main">
             <blockquote class="layui-elem-quote">
                 请参照以下内容修改你的go-cqhttp 的config.yml配置，未列出的部分保存原来的配置内容或者直接 <a target="_blank" style="color:red" href="../static/config.yml">下载</a> 后覆盖文件。
-                <p style="color:red">IP 地址填什么？</p> 执行命令：ifconfig -a 找到 docker0 下面一行 inet 172.17.0.1
+                <p style="color:red">IP 地址填什么？</p> 执行命令：ifconfig -a 找到 docker0 下面一行 inet:xxx.xxx.xx..x 一般为 172.17.0.1， 或者直接服务器放行配置的两个端口配置外网IP
             </blockquote>
             <pre class="layui-code">servers:
   - http: # http协议设置
@@ -25,8 +25,7 @@
       port: 8000 # 服务端监听端口
   - ws: # 正向WS设置
       host: 0.0.0.0 # 正向WS服务器监听地址
-      port: 8001 # 正向WS服务器监听端口
-</pre>
+      port: 8001 # 正向WS服务器监听端口</pre>
             <form class="layui-form" action="">
                 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                     <legend>机器人通讯配置</legend>

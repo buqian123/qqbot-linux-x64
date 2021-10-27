@@ -12,19 +12,43 @@
     {
       "title": "常规管理",
       "icon": "fa fa-address-book",
-      "href": "",
       "target": "_self",
       "child": [
+        {
+          "title": "青龙管理",
+          "icon": "fa fa-optin-monster",
+          "target": "_self",
+          "child": [
+            {
+              "title": "面板管理",
+              "href": "page/qinglong.html",
+              "icon": "fa fa-window-maximize",
+              "target": "_self"
+            },
+            {
+              "title": "定时任务",
+              "href": "page/qltask.html",
+              "icon": "fa fa-optin-monster",
+              "target": "_self"
+            },
+            {
+              "title": "脚本管理",
+              "href": "page/ql-scripts.html",
+              "icon": "fa fa-optin-monster",
+              "target": "_self"
+            },
+            {
+              "title": "配置文件",
+              "href": "page/configs.html",
+              "icon": "fa fa-optin-monster",
+              "target": "_self"
+            }
+          ]
+        },
         {
           "title": "账号管理",
           "href": "page/jdCookie.html",
           "icon": "fa fa-users",
-          "target": "_self"
-        },
-        {
-          "title": "青龙面板",
-          "href": "page/qinglong.html",
-          "icon": "fa fa-window-maximize",
           "target": "_self"
         },
         {
@@ -49,12 +73,6 @@
           "title": "环境变量",
           "href": "page/env.html",
           "icon": "fa fa-envira",
-          "target": "_self"
-        },
-        {
-          "title": "青龙任务",
-          "href": "page/qltask.html",
-          "icon": "fa fa-optin-monster",
           "target": "_self"
         },
         {

@@ -78,6 +78,7 @@
             <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 
             <script type="text/html" id="currentTableBar">
+                <i class="fa fa-file-text-o" aria-hidden="true" style="color:darkcyan" title="日志" lay-event="log"></i>
                 <i class="fa fa-play" aria-hidden="true" style="color:green" title="运行" lay-event="run"></i>
                 <i class="fa fa-pause" aria-hidden="true" style="color:orange" title="停止" lay-event="stop"></i>
                 <i class="fa fa-toggle-on" aria-hidden="true" style="color:cadetblue" title="启用" lay-event="enable"></i>
@@ -163,7 +164,7 @@ ${(d.QLTasks[i].isDisabled == 1) ? "禁用" : "启用"}
                                     return tttText;
                                 },
                             },
-                            { title: '操作', width: 130, toolbar: '#currentTableBar' }
+                            { title: '操作', width: 150, toolbar: '#currentTableBar' }
                         ]],
                         limits: [10, 15, 20, 25, 50, 100, 200],
                         limit: 10,
@@ -176,7 +177,7 @@ ${(d.QLTasks[i].isDisabled == 1) ? "禁用" : "启用"}
             }
             layInitTable = initTable;
             initTable();
-            common.ajax(`/QLConfig`, "get", {}, function (data) {
+            common.ajax(`/QLPanel`, "get", {}, function (data) {
                 for (var i = 0; i < data.length; i++) {
                     $("#ContainerId").append("<option value='" + data[i].Id + "'>" + data[i].Name + "</option>");
                 }
@@ -272,13 +273,27 @@ ${(d.QLTasks[i].isDisabled == 1) ? "禁用" : "启用"}
                         key: 'UpdateQLTask'
                         , value: data
                     });
-
                     layer.open({
                         title: '编辑青龙任务',
                         type: 2,
                         shade: 0.2,
                         area: ['800px', '600px'],
                         content: 'qltask-update.html',
+                        end: function () {
+                            initTable();
+                        }
+                    });
+                } else if (obj.event === 'log') {
+                    layui.data("UpdateQLTask", {
+                        key: 'UpdateQLTask'
+                        , value: data
+                    });
+                    layer.open({
+                        title: data.name+'运行日志',
+                        type: 2,
+                        shade: 0.2,
+                        area: ['60%', '100%'],
+                        content: 'qltask-log.html',
                         end: function () {
                             initTable();
                         }
