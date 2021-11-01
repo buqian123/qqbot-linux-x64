@@ -26,41 +26,47 @@
   - ws: # 正向WS设置
       host: 0.0.0.0 # 正向WS服务器监听地址
       port: 8001 # 正向WS服务器监听端口</pre>
-            <form class="layui-form" action="">
+            <form class="layui-form layuimini-form" action="">
                 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                     <legend>机器人通讯配置</legend>
                 </fieldset>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">Http协议</label>
+                    <label class="layui-form-label required">Http协议</label>
                     <div class="layui-input-block">
-                        <input type="text" name="cqhttpHttp" lay-verify="required" lay-reqtext="Http协议必填" placeholder="请参照填写示例填写，注意修改你的IP地址和端口号" autocomplete="off" class="layui-input">
+                        <input type="text" name="cqhttpHttp" lay-verify="required" lay-reqtext="Http协议必填" placeholder="请参照填写示例填写，注意修改你的IP地址和端口号，填写示例：http://172.17.0.1:8000" autocomplete="off" class="layui-input">
                         <div class="layui-form-mid layui-word-aux">
-                            填写示例：http://172.17.0.1:8000
+
                         </div>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">WS协议</label>
+                    <label class="layui-form-label required">WS协议</label>
                     <div class="layui-input-block">
-                        <input type="text" name="cqhttpWS" lay-verify="required" lay-reqtext="WS协议必填" placeholder="请参照填写示例填写，注意修改你的IP地址和端口号" autocomplete="off" class="layui-input">
-                        <div class="layui-form-mid layui-word-aux">
-                            填写示例：ws://172.17.0.1:8001
-                        </div>
+                        <input type="text" name="cqhttpWS" lay-verify="required" lay-reqtext="WS协议必填" placeholder="请参照填写示例填写，注意修改你的IP地址和端口号，填写示例：ws://172.17.0.1:8001" autocomplete="off" class="layui-input">
                     </div>
                 </div>
+                <!--<div class="layui-form-item">
+                    <label class="layui-form-label">accesstoken</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="cqhttpWS" placeholder="go-cqhttp access token，默认不需要配置，这部分不想写说明了" autocomplete="off" class="layui-input">
+                    </div>
+                </div>-->
                 <div class="layui-form-item">
                     <label class="layui-form-label">QQ群</label>
                     <div class="layui-input-block">
-                        <input type="text" name="Groups" placeholder="" autocomplete="off" class="layui-input">
-                        <div class="layui-form-mid layui-word-aux">
-                            请填写要监控的QQ群，多个用英文逗号隔开
-                        </div>
+                        <input type="text" name="Groups" placeholder="请填写要监控的QQ群，多个用英文逗号隔开" autocomplete="off" class="layui-input">
                     </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">管理QQ</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="ManagerQQ" lay-verify="required" lay-reqtext="管理QQ号码必填" placeholder="请输入机器人管理QQ号码" autocomplete="off" class="layui-input">
-                        </div>
+                </div>
+                <div class="layui-form-item ">
+                    <label class="layui-form-label required">管理QQ</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="ManagerQQ" lay-verify="required" lay-reqtext="管理QQ号码必填" placeholder="请输入机器人管理QQ号码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item ">
+                    <label class="layui-form-label required">Cookie检查</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="CookieCheckCron" lay-verify="required" lay-reqtext="Cookie检查Cron表达式必填" placeholder="6位Cron表达式 0 0 * * * ?" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -92,6 +98,8 @@
                     $("input[name=Groups]").val(data.Groups);
                     $("input[name=ManagerQQ]").val(data.ManagerQQ);
                     $("input[name=MaxQueryCount]").val(data.MaxQueryCount);
+                    $("input[name=CookieCheckCron]").val(data.CookieCheckCron);
+                    
                 }
             });
             //监听提交

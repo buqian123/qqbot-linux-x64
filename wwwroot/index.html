@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>QQBot Power by layuimini-iframe版</title>
+    <title>QQBot Power by Layui</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta http-equiv="Access-Control-Allow-Origin" content="*">
@@ -30,8 +30,8 @@
                     <div class="layuimini-tool"><i title="展开" class="fa fa-outdent" data-side-fold="1"></i></div>
                 </a>
                 <ul class="layui-nav layui-layout-right">
-                    <li class="layui-nav-item" lay-unselect >
-                        <a id="version" style="color:#f00" ></a>
+                    <li class="layui-nav-item" lay-unselect>
+                        <a id="version" style="color:#f00"></a>
                     </li>
                     <li class="layui-nav-item" lay-unselect>
                         <a href="javascript:;" data-refresh="刷新"><i class="fa fa-refresh"></i></a>
@@ -104,9 +104,9 @@
             miniAdmin.render(options);
             $('.login-out').on("click", function () {
                 layui.data("token", null);
-                layer.msg('退出登录成功', function () {
-                    window.location = 'login.html';
-                });
+                //layer.msg('退出登录成功', function () {
+                window.location = 'login.html';
+                //});
             });
             $.get("/api/Login/Version", function (data) {
                 document.getElementById("version").innerHTML = data.Data;

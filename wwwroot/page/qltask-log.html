@@ -10,26 +10,21 @@
     <link href="../iview/iview.css" rel="stylesheet" />
     <style>
         body { background-color: #ffffff; padding: 20px; }
-        #container { width: 100%; height: calc(100% - 90px); margin-top: 20px; }
+        #container { width: 100%; height: calc(100% - 90px); }
         html, body, #QLTask-Logs { height: 100%; }
+        header { position: fixed; top: 0; left: 0; width: 100%; background-color: #ffffff; padding:10px; }
     </style>
 </head>
 <body>
     <div id="QLTask-Logs">
         <header>
             <Tabs @on-click="changeSelectQL" v-model="SelectQLId">
-                <Tab-Pane v-for="item in QLTasks" :label="item.QLName" :name="item.QLId">{{item.QLName+"运行日志（每3秒自动刷新一次）"}}</Tab-Pane>
+                <Tab-Pane v-for="item in QLTasks" :label="item.QLName" :name="item.QLId">
+                    <!-- {{item.QLName+"运行日志（每3秒自动刷新一次）"}} -->
+                </Tab-Pane>
             </Tabs>
-            <!--<Breadcrumb>
-        <Breadcrumb-Item>
-            <i-select @on-change="changeSelectQL" filterable v-model="SelectQLId" style="width:200px">
-                <i-option v-for="item in QLTasks" :value="item.QLId" :key="item.QLId">{{ item.QLName }}</i-option>
-            </i-select>
-        </Breadcrumb-Item>
-    </Breadcrumb>-->
-
         </header>
-        <pre id="container" v-html="LogContent"></pre>
+        <pre id="container">{{LogContent}}</pre>
     </div>
     <script src="../iview/iview.min.js"></script>
     <script src="../vue/axios.min.js"></script>
@@ -68,7 +63,7 @@
             console.log(this.QLTasks)
             this.SelectQLId = this.QLTasks[0].QLId;
             this.changeSelectQL();
-            setInterval(function () { this.getLog(); }, 3000)
+            setInterval(function () { app2.getLog(); }, 3000)
         }
     });
 </script>

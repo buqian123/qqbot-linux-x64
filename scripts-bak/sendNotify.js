@@ -14,7 +14,7 @@ async function sendNotify(
     await gobotNotify(text, desp);
 }
 
-function gobotNotify(text, desp, time = 2100) {
+function gobotNotify(text, desp, time = 100) {
     return new Promise((resolve) => {
         if (GOBOT_URL) {
             const options = {

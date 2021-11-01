@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="../lib/layui-v2.6.3/css/layui.css" media="all">
     <link rel="stylesheet" href="../css/public.css" media="all">
+    <link rel="stylesheet" href="../lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
 </head>
 <body>
     <div class="layuimini-container">
@@ -49,13 +50,17 @@
                     <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="Sync"> Cookie同步 </button>
                     <button class="layui-btn layui-btn-normal layui-btn-sm data-enable-btn" lay-event="enable"> 启用 </button>
                     <button class="layui-btn layui-btn-normal layui-btn-sm data-disable-btn" lay-event="disable"> 禁用 </button>
+
                     <button class="layui-btn layui-btn-danger layui-btn-sm data-delete-btn" lay-event="delete"> 删除 </button>
                 </div>
             </script>
             <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
             <script type="text/html" id="currentTableBar">
-                <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
-                <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+                <!--<a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>-->
+
+                <i class="fa fa-edit" aria-hidden="true" style="color:#ff6a00" title="编辑" lay-event="edit"></i>
+                <i class="fa fa-remove" aria-hidden="true" style="color:red" title="删除" lay-event="delete"></i>
+                <!--<a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>-->
             </script>
         </div>
     </div>
@@ -83,14 +88,28 @@
                         }],
                         cols: [[
                             { type: "checkbox", width: 50 },
-                            { field: 'ContainerName', width: 120, title: '青龙容器', sort: true },
+                            {
+                                field: 'ContainerName', width: 130, title: '青龙容器', sort: true, templet(d) {
+                                    var names="";
+                                    for (var i = 0; i < d.QLPanelCookies.length; i++) {
+        if(i< d.QLPanelCookies.length-1)
+        {
+        
+                                        names += d.QLPanelCookies[i].QLPanelName+"，";}else{
+                                        names += d.QLPanelCookies[i].QLPanelName
+        }
+                                    }
+                                    return (names ?? "未分配")
+                                }
+                            },
                             {
                                 field: 'PTPin', title: 'Cookie', templet(d) {
                                     return `pt_key=${d.PTKey};pt_pin=${d.PTPin};`;
                                 }
                             },
                             {
-                                field: 'QQ', title: 'QQ', sort: true, templet(d) {
+                                field: 'QQ', title: 'QQ', sort: true,
+                                width: 120, templet(d) {
                                     if (d.QQ > 0) {
                                         return d.QQ;
                                     }
@@ -101,26 +120,30 @@
                                 field: 'Priority', title: '权重', sort: true,
                                 width: 80
                             },
-                            { field: 'nickname', title: '昵称' },
-                            {
-                                field: 'beanNum', title: '京豆', sort: true,
-                                width: 90
-                            },
+                            { field: 'nickname', title: '昵称',width: 120 },
+                            //{
+                            //    field: 'beanNum', title: '京豆', sort: true,
+                            //    width: 90
+                            //},
                             {
                                 field: 'Available', title: '可用', sort: true, templet(d) {
                                     return d.Available ? "是" : "否";
                                 },
                                 width: 80
                             },
-                            { field: 'Remark', title: '备注', sort: true },
-                            { field: 'CreateTime', title: '添加时间' },
                             {
-                                field: 'Top', title: '置顶', sort: true, templet(d) {
-                                    return `<a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="top">${d.Top ? "取消" : "置顶"}</a>`
-                                },
-                                width: 80
-                            },
-                            { title: '操作', minWidth: 120, toolbar: '#currentTableBar', align: "center" }
+                                field: 'Remark', title: '备注', sort: true,
+                                width: 120 },
+                            {
+                                field: 'CreateTime', title: '添加时间',
+                                width: 150},
+                            //{
+                            //    field: 'Top', title: '置顶', sort: true, templet(d) {
+                            //        return `<a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="top">${d.Top ? "取消" : "置顶"}</a>`
+                            //    },
+                            //    width: 80
+                            //},
+                            { title: '操作', width: 90, toolbar: '#currentTableBar', align: "center" }
                         ]],
                         limits: [10, 15, 20, 25, 50, 100],
                         limit: 20,
@@ -215,7 +238,7 @@
                         shade: 0.2,
                         maxmin: true,
                         shadeClose: true,
-                        area: ['50%', '45%'],
+                        area: ['800px', '400px'],
                         content: 'jdCookie-add.html?id=' + data.Id,
                         end: initTable
                     });
@@ -232,18 +255,19 @@
                             });
                         });
                     });
-                } else if (obj.event === 'top') {
-                    layer.confirm('真的要' + (data.Top ? "置顶" : "取消置顶") + '吗？', function (index) {
-                        common.ajax(`/JDCookie/top/${data.Id}/${!data.Top}`, "get", {}, function (data111) {
-                            var message = "置顶成功，开卡无忧！";
-                            if (data.Top) {
-                                message = "取消置顶完成！"
-                            }
-                            layer.msg(message, { icon: 6 });
-                            initTable();
-                        });
-                    });
                 }
+                //else if (obj.event === 'top') {
+                //    layer.confirm('真的要' + (data.Top ? "置顶" : "取消置顶") + '吗？', function (index) {
+                //        common.ajax(`/JDCookie/top/${data.Id}/${!data.Top}`, "get", {}, function (data111) {
+                //            var message = "置顶成功，开卡无忧！";
+                //            if (data.Top) {
+                //                message = "取消置顶完成！"
+                //            }
+                //            layer.msg(message, { icon: 6 });
+                //            initTable();
+                //        });
+                //    });
+                //}
             });
         });
     </script>

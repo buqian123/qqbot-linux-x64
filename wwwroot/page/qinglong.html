@@ -48,12 +48,15 @@
                         {
                             field: 'PassWord', title: '密码', sort: true, templet(d) {
                                 return "******";
-                            }},
+                            }
+                        },
                         { field: 'ClientID', title: 'ClientID' },
                         {
                             field: 'ClientSecret', title: 'ClientSecret', sort: true, templet(d) {
                                 return "******";
-                            } },
+                            }
+                        },
+                        { field: 'MaxCount', width: 90, title: '数量上限' },
                         { field: 'CookieCount', width: 90, title: 'CK数量' },
                         { field: 'Weigth', title: '权重' },
                         {
@@ -78,11 +81,8 @@
                         title: '添加青龙面板',
                         type: 2,
                         shade: 0.2,
-                        area: ['50%', '85%'],
+                        area: ['800px', '700px'],
                         content: '../page/qinglong-add.html',
-                    });
-                    $(window).on("resize", function () {
-                        layer.full(index);
                     });
                 } else if (obj.event === 'delete') {  // 监听删除操作
                     var checkStatus = table.checkStatus('currentTableId')
@@ -102,11 +102,8 @@
                         title: '编辑青龙面板',
                         type: 2,
                         shade: 0.2,
-                        area: ['50%', '85%'],
+                        area: ['800px', '700px'],
                         content: '../page/qinglong-add.html?id=' + data.Id,
-                    });
-                    $(window).on("resize", function () {
-                        layer.full(index);
                     });
                     return false;
                 } else if (obj.event === 'delete') {

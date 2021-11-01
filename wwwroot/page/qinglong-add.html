@@ -14,10 +14,15 @@
 </head>
 <body>
     <div class="layui-form layuimini-form">
+        <blockquote class="layui-elem-quote">
+            请打开青龙面板，系统设置>应用设置 添加一个应用，权限全选。
+        </blockquote>
         <div class="layui-form-item">
             <label class="layui-form-label required">面板名称</label>
             <div class="layui-input-block">
                 <input type="text" id="Name" name="Name" lay-verify="required" placeholder="请输入面板别名" lay-reqtext="面板名称不能为空" value="" class="layui-input">
+                <input type="hidden" id="Id" name="Id">
+                <input type="hidden" id="EnableAll" name="EnableAll" value="false">
             </div>
         </div>
         <div class="layui-form-item">
@@ -27,20 +32,6 @@
                 <div class="layui-form-mid layui-word-aux">
                     面板地址填写示例：http://192.168.2.199:5700
                 </div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label required">用户名</label>
-            <div class="layui-input-block">
-                <input type="text" id="UserName" name="UserName" class="layui-input">
-                <input type="hidden" id="Id" name="Id">
-                <input type="hidden" id="EnableAll" name="EnableAll" value="false">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label required">密码</label>
-            <div class="layui-input-block">
-                <input type="password" id="PassWord" name="PassWord" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -56,11 +47,28 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">权重</label>
+            <label class="layui-form-label ">用户名</label>
+            <div class="layui-input-block">
+                <input type="text" id="UserName" name="UserName" class="layui-input">
+            </div>
+        </div><div class="layui-form-item">
+            <label class="layui-form-label ">密码</label>
+            <div class="layui-input-block">
+                <input type="password" id="PassWord" name="PassWord" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">最大容量</label>
+            <div class="layui-input-block">
+                <input type="number" id="MaxCount" lay-verify="required" placeholder="分配的Cookie大于这个值后不再分配" lay-reqtext="请输入最大容量" name="MaxCount" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">权重</label>
             <div class="layui-input-block">
                 <input type="number" id="Weigth" name="Weigth" lay-verify="required" lay-reqtext="请输入权重" value="1" class="layui-input">
                 <div class="layui-form-mid layui-word-aux">
-                    权重数字越大，分配到的Cookie越多。
+                    权重数字越大，分配到的Cookie越多，如不想分配Cookie请填-1。
                 </div>
             </div>
         </div>
@@ -95,9 +103,10 @@
                     if (data) {
                         $("#UserName").val(data.UserName);
                         $("#Name").val(data.Name);
+                        $("#Address").val(data.Address);
                         $("#Id").val(data.Id);
                         $("#PassWord").val(data.PassWord);
-                        $("#Address").val(data.Address);
+                        $("#MaxCount").val(data.MaxCount);
                         $("#Weigth").val(data.Weigth);
                         $("#ClientID").val(data.ClientID);
                         $("#ClientSecret").val(data.ClientSecret);
@@ -117,6 +126,9 @@
             form.on('submit(saveBtn)', function (data) {
                 if (data.field.Weigth < 1) {
                     layer.msg("权重值必须大于0", { icon: 5 });
+                }
+                if (data.field.MaxCount < 0) {
+                    layer.msg("容器最大容量必须大于等于0。", { icon: 5 });
                 }
                 common.ajax("/QLPanel", "post", JSON.stringify(data.field), function (data) {
                     parent.document.location.reload();
