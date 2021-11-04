@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>layui</title>
@@ -8,13 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <script src="../vue/vue.min.js"></script>
     <link href="../iview/iview.css" rel="stylesheet" />
-    <style>
-        /* body { background-color: #ffffff; padding: 20px; }
-        #container { width: 100%; height: calc(100% - 90px); }
-        html, body, #QLTask-Logs { height: 100%; }
-        header { position: fixed; top: 0; left: 0; width: 100%; background-color: #ffffff; }*/
-    </style>
 </head>
+
 <body>
     <div id="edit-JDCookie">
         <i-form ref="Edit-Form" id="Edit-Form" :model="EditCookie" style=" padding:25px;" :label-width="100">
@@ -56,22 +52,21 @@
             methods: {
                 getCookieById() {
                     axios.get('/api/JDCookie/' + this.EditCookie.Id)
-                        .then(function (response) {
-                            debugger
+                        .then(function(response) {
                             editCookie.EditCookie = response;
                             editCookie.EditCookie.TQLPanelCookies = [];
-                            for (var x = 0; x < editCookie.EditCookie.QLPanelCookies?.length; x++) {
+                            for (var x = 0; x < editCookie.EditCookie.QLPanelCookies.length; x++) {
                                 editCookie.EditCookie.TQLPanelCookies.push(editCookie.EditCookie.QLPanelCookies[x].QLPanelId)
                             }
                         })
-                        .catch(function (error) {
+                        .catch(function(error) {
                             editCookie.$Notice.error({
                                 title: '请求错误',
                                 desc: error
                             })
                         });
                 },
-                queryString: function (name) {
+                queryString: function(name) {
                     var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
                     var r = window.location.search.substr(1).match(reg);
                     if (r != null) {
@@ -81,17 +76,19 @@
                 },
                 getPanels() {
                     axios.get('/api/QLPanel')
-                        .then(function (response) {
+                        .then(function(response) {
                             for (var i = 0; i < response.length; i++) {
-                                editCookie.AllPanels.push({
-                                    QLPanelId: response[i].Id,
-                                    QLPanelName: response[i].Name
-                                });
+                                if (!response[i].Enable) {
+                                    editCookie.AllPanels.push({
+                                        QLPanelId: response[i].Id,
+                                        QLPanelName: response[i].Name
+                                    });
+                                }
                             }
                             console.log(editCookie.AllPanels)
                             editCookie.getCookieById();
                         })
-                        .catch(function (error) {
+                        .catch(function(error) {
                             editCookie.$Notice.error({
                                 title: '请求错误',
                                 desc: error
@@ -112,12 +109,13 @@
                                 title: '提交确认',
                                 content: '确定提交修改的账号信息吗？',
                                 okText: '确定',
-                                cancelText: '取消', onOk: () => {
+                                cancelText: '取消',
+                                onOk: () => {
                                     axios.put('/api/JDCookie', this.EditCookie)
-                                        .then(function (response) {
+                                        .then(function(response) {
                                             parent.layer.closeAll();
                                         })
-                                        .catch(function (error) {
+                                        .catch(function(error) {
                                             console.log(error);
                                         });
                                 }
@@ -133,10 +131,10 @@
             },
             mounted() {
                 this.EditCookie.Id = this.queryString("id");
-                //this.getCookieById();
                 this.getPanels();
             }
         });
     </script>
 </body>
+
 </html>

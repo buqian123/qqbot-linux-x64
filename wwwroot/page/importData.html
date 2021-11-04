@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>layui</title>
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="../lib/layui-v2.6.3/css/layui.css" media="all">
     <link rel="stylesheet" href="../css/public.css" media="all">
 </head>
+
 <body>
     <div class="layuimini-container">
         <div class="layuimini-main">
@@ -51,30 +53,26 @@
     <script src="../js/lay-config.js?v=2.0.0" charset="utf-8"></script>
     <script>
         layui.use(['form', 'layedit', 'laydate', "jquery", 'common'], function () {
-            var form = layui.form
-                , layer = layui.layer,
-                $ = layui.jquery
-                , common = layui.common
-
-
+            var form = layui.form,
+                layer = layui.layer,
+                $ = layui.jquery,
+                common = layui.common
             var upload = layui.upload;
 
             //执行实例
             var uploadInst = upload.render({
-                elem: '#upload' //绑定元素
-                , url: '/api/upload' //上传接口
-                , accept: "flie"
-                , done: function (res) {
-                    debugger
+                elem: '#upload',
+                url: '/api/upload',
+                accept: "flie",
+                done: function (res) {
                     if (res.Code == 200) {
                         $("#Address").val(res.Data.Path)
-                    } else {
-
                     }
-                }, headers: { "Authorization": "Bearer " + layui.data("token").token }
-                , error: function () {
-                    //请求异常回调
-                }
+                },
+                headers: {
+                    "Authorization": "Bearer " + layui.data("token").token
+                },
+                error: function () { }
             });
 
             form.on('submit(importData)', function (data) {
@@ -87,4 +85,5 @@
     </script>
 
 </body>
+
 </html>

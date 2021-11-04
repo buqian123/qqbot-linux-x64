@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>layui</title>
@@ -12,6 +13,7 @@
         body { background-color: #ffffff; }
     </style>
 </head>
+
 <body>
     <i-form ref="AddQLTask" id="Add-QLTask" :model="AddQLTask" style=" padding:25px;" :label-width="100" :rules="ruleInline">
         <form-item label="任务名称" prop="name">
@@ -22,12 +24,12 @@
             <i-input type="text" name="command" v-model="AddQLTask.command">
             </i-input>
         </form-item>
-        <form-item label="定时调度" prop="schedule">
-            <i-input type="text" name="schedule" v-model="AddQLTask.schedule">
+        <form-item label="定时调度">
+            <i-input type="text" name="schedule" placeholder="不会填的参考青龙，填错了无法提交到青龙。" v-model="AddQLTask.schedule">
             </i-input>
         </form-item>
         <form-item label="脚本文件">
-            <Upload :show-upload-list="false" :on-success="onSuccess" action="/api/Upload/scripts" :headers="UploadHeaders">
+            <Upload :show-upload-list="false" :on-success="onSuccess" action="/api/Upload/scripts?dir=ql" :headers="UploadHeaders">
                 <i-button icon="ios-cloud-upload-outline">上传文件</i-button>
             </Upload>
         </form-item>
@@ -44,6 +46,7 @@
     <script src="../iview/iview.min.js"></script>
     <script src="../vue/axios.min.js"></script>
 </body>
+
 </html>
 <script>
     var app2 = new Vue({
@@ -58,30 +61,19 @@
             },
             UploadHeaders: {},
             ruleInline: {
-                name: [
-                    { required: true, message: '任务名称不能为空', trigger: 'blur' }
-                ],
-                command: [
-                    { required: true, message: '任务命令不能为空', trigger: 'blur' }
-                ],
-                schedule: [
-                    { required: true, message: '任务定时执行表达式不能为空', trigger: 'blur' },
-                    {
-                        validator: (rule, value, callback) => {
-                            if (!app2.validateCron(value)) {
-                                callback(new Error('定时调度表达式验证失败'))
-                            }
-                            return callback();
-                        }, message: '定时调度表达式验证失败', trigger: 'blur'
-                    }
-                ]
+                name: [{
+                    required: true,
+                    message: '任务名称不能为空',
+                    trigger: 'blur'
+                }],
+                command: [{
+                    required: true,
+                    message: '任务命令不能为空',
+                    trigger: 'blur'
+                }]
             }
         },
         methods: {
-            validateCron(cron) {
-                var re = new RegExp("^\\s*($|#|\\w+\\s*=|(\\?|\\*|(?:[0-5]?\\d)(?:(?:-|\/|\\,)(?:[0-5]?\\d))?(?:,(?:[0-5]?\\d)(?:(?:-|\/|\\,)(?:[0-5]?\\d))?)*)\\s+(\\?|\\*|(?:[01]?\\d|2[0-3])(?:(?:-|\/|\\,)(?:[01]?\\d|2[0-3]))?(?:,(?:[01]?\\d|2[0-3])(?:(?:-|\/|\\,)(?:[01]?\\d|2[0-3]))?)*)\\s+(\\?|\\*|(?:0?[1-9]|[12]\\d|3[01])(?:(?:-|\/|\\,)(?:0?[1-9]|[12]\\d|3[01]))?(?:,(?:0?[1-9]|[12]\\d|3[01])(?:(?:-|\/|\\,)(?:0?[1-9]|[12]\\d|3[01]))?)*)\\s+(\\?|\\*|(?:[1-9]|1[012])(?:(?:-|\/|\\,)(?:[1-9]|1[012]))?(?:L|W)?(?:,(?:[1-9]|1[012])(?:(?:-|\/|\\,)(?:[1-9]|1[012]))?(?:L|W)?)*|\\?|\\*|(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)(?:(?:-)(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC))?(?:,(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)(?:(?:-)(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC))?)*)\\s+(\\?|\\*|(?:[0-6])(?:(?:-|\/|\\,|#)(?:[0-6]))?(?:L)?(?:,(?:[0-6])(?:(?:-|\/|\\,|#)(?:[0-6]))?(?:L)?)*|\\?|\\*|(?:MON|TUE|WED|THU|FRI|SAT|SUN)(?:(?:-)(?:MON|TUE|WED|THU|FRI|SAT|SUN))?(?:,(?:MON|TUE|WED|THU|FRI|SAT|SUN)(?:(?:-)(?:MON|TUE|WED|THU|FRI|SAT|SUN))?)*)(|\\s)+(\\?|\\*|(?:|\\d{4})(?:(?:-|\/|\\,)(?:|\\d{4}))?(?:,(?:|\\d{4})(?:(?:-|\/|\\,)(?:|\\d{4}))?)*))$");
-                return re.test(cron)
-            },
             onSuccess(res, file, fileList) {
                 app2.AddQLTask.command = "task " + file.name;
                 app2.AddQLTask.File = file.name;
@@ -92,7 +84,9 @@
                     this.AddQLTask.QLTasks = [];
                     for (var i = 0; i < this.AddQLTask.QLPanels.length; i++) {
                         if (this.AddQLTask.QLPanels[i].Enable) {
-                            this.AddQLTask.QLTasks.push({ QLId: this.AddQLTask.QLPanels[i].QLId });
+                            this.AddQLTask.QLTasks.push({
+                                QLId: this.AddQLTask.QLPanels[i].QLId
+                            });
                         }
                     }
                     if (this.AddQLTask.QLTasks.length == 0) {
@@ -127,7 +121,7 @@
             }
         },
         mounted() {
-            this.UploadHeaders.Authorization = "Bearer " + JSON.parse(localStorage.getItem("token"))?.token;
+            this.UploadHeaders.Authorization = "Bearer " + JSON.parse(localStorage.getItem("token")).token;
             axios.get('/api/QLPanel')
                 .then(function (response) {
                     for (var i = 0; i < response.length; i++) {
