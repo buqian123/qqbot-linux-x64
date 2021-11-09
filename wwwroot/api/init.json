@@ -46,6 +46,31 @@
           ]
         },
         {
+          "title": "系统管理",
+          "icon": "fa fa-cog",
+          "target": "_self",
+          "child": [
+            {
+              "title": "基础设置",
+              "href": "page/setting.html",
+              "icon": "fa fa-cog",
+              "target": "_self"
+            },
+            {
+              "title": "数据迁移",
+              "href": "page/database-migration.html",
+              "icon": "fa fa-database",
+              "target": "_self"
+            },
+            {
+              "title": "数据导入",
+              "href": "page/importData.html",
+              "icon": "fa fa-database",
+              "target": "_self"
+            }
+          ]
+        },
+        {
           "title": "账号管理",
           "href": "page/jdCookie.html",
           "icon": "fa fa-users",
@@ -58,12 +83,6 @@
           "target": "_self"
         },
         {
-          "title": "系统设置",
-          "href": "page/setting.html",
-          "icon": "fa fa-cog",
-          "target": "_self"
-        },
-        {
           "title": "脚本指令",
           "href": "page/task.html",
           "icon": "fa fa-terminal",
@@ -73,12 +92,6 @@
           "title": "环境变量",
           "href": "page/env.html",
           "icon": "fa fa-envira",
-          "target": "_self"
-        },
-        {
-          "title": "数据导入",
-          "href": "page/importData.html",
-          "icon": "fa fa-database",
           "target": "_self"
         }
       ]

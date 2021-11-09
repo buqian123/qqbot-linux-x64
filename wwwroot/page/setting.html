@@ -66,6 +66,40 @@
             </row>
             <row>
                 <i-col span="12">
+                    <form-item label="短信服务">
+                        <i-input type="text" name="SMSService" placeholder="请配置qqbot-jdc服务地址，填写示例：172.17.0.1:5020" v-model="SystemConfig.SMSService">
+                            <span slot="prepend">http://</span><span slot="append">
+                                <input type="checkbox" name="SMSAllowGroup" id="SMSAllowGroup" v-model="SystemConfig.SMSAllowGroup">
+                                <label for="SMSAllowGroup">允许群内使用短信登录</label>
+                            </span>
+                        </i-input>
+                    </form-item>
+                </i-col>
+                <i-col span="12">
+                    <form-item label="短信黑名单">
+                        <i-input type="text" name="SMSBlackQQ" placeholder="黑名单QQ号，多个用英文逗号分割" v-model="SystemConfig.SMSBlackQQ">
+
+                        </i-input>
+                    </form-item>
+                </i-col>
+                <!--<i-col span="12">
+                    <form-item label="短信登录限制">
+                        <i-input type="number" name="SMSMaxCount" placeholder="一个QQ号每天使用短信登录的次数限制" v-model="SystemConfig.SMSMaxCount">
+                        </i-input>
+                    </form-item>
+                </i-col>-->
+            </row>
+            <!--<row>
+                <i-col span="24">
+                    <form-item label="短信黑名单">
+                        <i-input type="text" name="SMSBlackQQ" placeholder="黑名单QQ号，多个用英文逗号分割" v-model="SystemConfig.SMSBlackQQ">
+
+                        </i-input>
+                    </form-item>
+                </i-col>
+            </row>-->
+            <row>
+                <i-col span="12">
                     <form-item label="好友欢迎语">
                         <i-input type="text" name="AddFriendMessage" placeholder="自动通过好友后向好友发送欢迎语" v-model="SystemConfig.AddFriendMessage">
                             <span slot="append">
@@ -131,16 +165,21 @@
                                 onOk: () => {
                                     var d = JSON.parse(JSON.stringify(systemConfigApp.SystemConfig));
                                     d.cqhttpHttp = "http://" + d.cqhttpHttp
+                                    if (d.SMSService) {
+                                        d.SMSService = "http://" + d.SMSService
+                                    }
                                     d.cqhttpWS = "ws://" + d.cqhttpWS
                                     console.log(d)
                                     axios.post('/api/SystemConfig', d)
                                         .then(function (response) {
                                             systemConfigApp.$Notice.success({
-                                                desc:"更新配置信息成功！"
+                                                desc: "更新配置信息成功！"
                                             });
                                         })
                                         .catch(function (error) {
-                                            console.log(error);
+                                            systemConfigApp.$Notice.error({
+                                                desc: error
+                                            });
                                         });
                                 }
                             });
@@ -157,8 +196,12 @@
                         systemConfigApp.SystemConfig = response;
                         if (systemConfigApp.SystemConfig.cqhttpHttp) {
                             systemConfigApp.SystemConfig.cqhttpHttp = systemConfigApp.SystemConfig.cqhttpHttp.replace("http://", "")
-                        } if (systemConfigApp.SystemConfig.cqhttpWS) {
+                        }
+                        if (systemConfigApp.SystemConfig.cqhttpWS) {
                             systemConfigApp.SystemConfig.cqhttpWS = systemConfigApp.SystemConfig.cqhttpWS.replace("ws://", "")
+                        }
+                        if (systemConfigApp.SystemConfig.SMSService) {
+                            systemConfigApp.SystemConfig.SMSService = systemConfigApp.SystemConfig.SMSService.replace("http://", "")
                         }
                     });
                 }

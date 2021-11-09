@@ -10,9 +10,7 @@
     <script src="../vue/vue.min.js"></script>
     <link href="../iview/iview.css" rel="stylesheet" />
     <style>
-        body {
-            background-color: #ffffff;
-        }
+        body { background-color: #ffffff; }
     </style>
 </head>
 
@@ -29,6 +27,9 @@
         </form-item>
         <form-item label="定时调度">
             <i-input type="text" name="schedule" placeholder="不会填的参考青龙，填错了无法提交到青龙。" v-model="UpdateQLTask.schedule">
+                <span slot="append">
+                    <i-button @click="syncSchedule" title="修改所有容器的定时调度规则">同步</i-button>
+                </span>
             </i-input>
         </form-item>
         <Divider>青龙容器详细配置</Divider>
@@ -69,6 +70,11 @@
             }
         },
         methods: {
+            syncSchedule() {
+                for (var i = 0; i < this.UpdateQLTask.QLTasks.length; i++) {
+                    this.UpdateQLTask.QLTasks[i].schedule = this.UpdateQLTask.schedule;
+                }
+            },
             handleSubmit(name) {
                 this.$refs[name].validate((valid) => {
                     for (var i = 0; i < this.UpdateQLTask.QLTasks.length; i++) {
@@ -85,10 +91,10 @@
                             cancelText: '取消',
                             onOk: () => {
                                 axios.put('/api/QLTask/update', this.UpdateQLTask)
-                                    .then(function(response) {
+                                    .then(function (response) {
                                         parent.layer.closeAll();
                                     })
-                                    .catch(function(error) {
+                                    .catch(function (error) {
                                         console.log(error);
                                     });
                             }
