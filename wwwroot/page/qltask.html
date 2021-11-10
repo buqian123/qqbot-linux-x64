@@ -100,12 +100,14 @@
             layer.confirm(`是否${(status == 0 ? "停止" : "运行")}‘${qlName}’的‘${taskName}’任务？`, function (index) {
                 runStatus([{ QLId: qlId, TaskIds: [taskId] }], status == 0 ? "stop" : "run", `操作${(status == 0 ? "停止" : "运行")}‘${qlName}’的‘${taskName}’任务完成！`)
             });
+            return false;
         }
 
         function runDisableDBC(taskName, qlName, qlId, taskId, isDisable) {
             layer.confirm(`是否${(isDisable == 1 ? "启用" : "禁用")}‘${qlName}’的‘${taskName}’任务？`, function (index) {
                 runStatus([{ QLId: qlId, TaskIds: [taskId] }], isDisable == 1 ? "enable" : "disable", `操作${(isDisable == 1 ? "启用" : "禁用")}‘${qlName}’的‘${taskName}’任务完成！`)
             });
+            return false;
         }
 
         function runStatus(datas, action, message, method = "post") {
@@ -115,11 +117,95 @@
                     layInitTable();
                 });
         }
+
+        function editScripts(command) {
+            if (command.indexOf("task")>-1 && command.split(" ").length == 2) {
+                layer.open({
+                    title: '修改脚本',
+                    type: 2,
+                    shade: 0.2,
+                    area: ['100%', '100%'],
+                    content: 'ql-scripts.html?fileName=' + command.split(" ")[1]
+                });
+            }
+        }
+
+        function showLog(command) {
+            var data = taskList.filter((n) => n.command == command)[0];
+            layui.data("UpdateQLTask", {
+                key: 'UpdateQLTask'
+                , value: data
+            });
+            layer.open({
+                title: data.name + '运行日志',
+                type: 2,
+                shade: 0.2,
+                area: ['60%', '100%'],
+                content: 'qltask-log.html'
+            });
+        }
+        var taskList = [];
         var sss = layui.use(['form', 'table', 'common'], function () {
             $ = layui.jquery,
                 form = layui.form,
                 common = layui.common,
                 table = layui.table;
+
+            table.on('rowDouble(currentTableFilter)', function (obj) {
+                alert("ttt")
+            });
+
+            var taskTable = table.render({
+                elem: '#currentTableId',
+                toolbar: '#toolbarDemo',
+                defaultToolbar: ['filter', 'exports', 'print', {
+                    title: '提示',
+                    layEvent: 'LAYTABLE_TIPS',
+                    icon: 'layui-icon-tips'
+                }],
+                cols: [[
+                    { type: "checkbox", width: 50 },
+                    {
+                        field: 'name', title: '任务名称', width: 150, templet(d) {
+                            return `<a href='javascript:void(0)' onclick='showLog("${d.command}")'>${d.name} </a>`
+                        }
+                    },
+                    {
+                        field: 'command', title: '任务命令', width: 220, templet(d) {
+                            return `<a href='javascript:void(0)' onclick='editScripts("${d.command}")'>${d.command}</a>`
+                        }
+                    },
+                    {
+                        field: 'QLTasks', title: '运行情况', style: "line-height: 28px !important; vertical-align: middle !important; height: auto !important; overflow: visible !important; text-overflow: inherit !important; white-space: normal !important;", templet(d) {
+                            let tttText = "";
+                            for (var i = 0; i < d.QLTasks.length; i++) {
+                                tttText += `<button ondblclick="runStatusDBC('${d.name}','${d.QLTasks[i].QLName}','${d.QLTasks[i].QLId}','${d.QLTasks[i]._id}',${d.QLTasks[i].status})" type="button" class="layui-btn layui-btn-primary layui-btn-xs ${(d.QLTasks[i].status == 1) ? "layui-border-warm" : "layui-border-green"}">${d.QLTasks[i].QLName}
+${(d.QLTasks[i].status == 0) ? "运行" : "空闲"}
+</button>`;
+                            }
+                            return tttText;
+                        },
+                    },
+                    {
+                        field: 'QLTasks', title: '启用状态', style: "layui-table-cells-1", templet(d) {
+                            let tttText = "";
+                            for (var i = 0; i < d.QLTasks.length; i++) {
+                                tttText += `<button
+ondblclick="runDisableDBC('${d.name}','${d.QLTasks[i].QLName}','${d.QLTasks[i].QLId}','${d.QLTasks[i]._id}',${d.QLTasks[i].isDisabled})"
+type="button" class="layui-btn layui-btn-primary layui-btn-xs ${(d.QLTasks[i].isDisabled) ? "layui-border-red" : "layui-border-blue"}">${d.QLTasks[i].QLName}
+${(d.QLTasks[i].isDisabled == 1) ? "禁用" : "启用"}
+</button>`;
+                            }
+                            return tttText;
+                        },
+                    },
+                    { title: '操作', width: 150, toolbar: '#currentTableBar' }
+                ]],
+                limit: 999999,
+                skin: 'line',
+                data: [],
+                size: "lg"
+            });
 
             function initTable() {
                 common.ajax("/QLTask", "get", {
@@ -128,51 +214,8 @@
                     isDisabled: $("#isDisabled").val(),
                     status: $("#status").val()
                 }, function (data) {
-                    table.render({
-                        elem: '#currentTableId',
-                        toolbar: '#toolbarDemo',
-                        defaultToolbar: ['filter', 'exports', 'print', {
-                            title: '提示',
-                            layEvent: 'LAYTABLE_TIPS',
-                            icon: 'layui-icon-tips'
-                        }],
-                        cols: [[
-                            { type: "checkbox", width: 50 },
-                            { field: 'name', title: '任务名称', width: 120 },
-                            { field: 'command', title: '任务命令', width: 120 },
-                            {
-                                field: 'QLTasks', title: '运行情况', style: "line-height: 28px !important; vertical-align: middle !important; height: auto !important; overflow: visible !important; text-overflow: inherit !important; white-space: normal !important;", templet(d) {
-                                    let tttText = "";
-                                    for (var i = 0; i < d.QLTasks.length; i++) {
-                                        tttText += `<button ondblclick="runStatusDBC('${d.name}','${d.QLTasks[i].QLName}','${d.QLTasks[i].QLId}','${d.QLTasks[i]._id}',${d.QLTasks[i].status})" type="button" class="layui-btn layui-btn-primary layui-btn-xs ${(d.QLTasks[i].status == 1) ? "layui-border-warm" : "layui-border-green"}">${d.QLTasks[i].QLName}
-${(d.QLTasks[i].status == 0) ? "运行" : "空闲"}
-</button>`;
-                                    }
-                                    return tttText;
-                                },
-                            },
-                            {
-                                field: 'QLTasks', title: '启用状态', style: "layui-table-cells-1", templet(d) {
-                                    let tttText = "";
-                                    for (var i = 0; i < d.QLTasks.length; i++) {
-                                        tttText += `<button
-ondblclick="runDisableDBC('${d.name}','${d.QLTasks[i].QLName}','${d.QLTasks[i].QLId}','${d.QLTasks[i]._id}',${d.QLTasks[i].isDisabled})"
-type="button" class="layui-btn layui-btn-primary layui-btn-xs ${(d.QLTasks[i].isDisabled) ? "layui-border-red" : "layui-border-blue"}">${d.QLTasks[i].QLName}
-${(d.QLTasks[i].isDisabled == 1) ? "禁用" : "启用"}
-</button>`;
-                                    }
-                                    return tttText;
-                                },
-                            },
-                            { title: '操作', width: 150, toolbar: '#currentTableBar' }
-                        ]],
-                        limits: [10, 15, 20, 25, 50, 100, 200],
-                        limit: 10,
-                        page: true,
-                        skin: 'line',
-                        data: data,
-                        size: "lg"
-                    });
+                    taskList = data;
+                    taskTable.reload({ data: data })
                 });
             }
             layInitTable = initTable;
@@ -190,18 +233,13 @@ ${(d.QLTasks[i].isDisabled == 1) ? "禁用" : "启用"}
                 return false;
             });
 
-            //监听表格复选框选择
-            table.on('checkbox(currentTableFilter)', function (obj) {
-                console.log(obj)
-            });
-
             table.on('toolbar(currentTableFilter)', function (obj) {
-
                 var op = obj.event == "run" ? "运行" : obj.event == "stop" ? "停止" : obj.event == "enable" ? "启用" : obj.event == "disable" ? "禁用" : "删除";
-
                 var checkStatus = table.checkStatus('currentTableId')
                     , datas = checkStatus.data;
-
+                if (obj.event.indexOf("LAYTABLE") > -1) {
+                    return;
+                }
                 if (obj.event != "add" && (!datas || datas.length == 0)) {
                     layer.msg("未勾选任何任务。", { icon: 5 });
                     return;
@@ -289,7 +327,7 @@ ${(d.QLTasks[i].isDisabled == 1) ? "禁用" : "启用"}
                         , value: data
                     });
                     layer.open({
-                        title: data.name+'运行日志',
+                        title: data.name + '运行日志',
                         type: 2,
                         shade: 0.2,
                         area: ['60%', '100%'],

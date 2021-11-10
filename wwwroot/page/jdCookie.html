@@ -56,11 +56,8 @@
             </script>
             <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
             <script type="text/html" id="currentTableBar">
-                <!--<a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>-->
-
                 <i class="fa fa-edit" aria-hidden="true" style="color:#ff6a00" title="编辑" lay-event="edit"></i>
-                <i class="fa fa-remove" aria-hidden="true" style="color:red" title="删除" lay-event="delete"></i>
-                <!--<a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>-->
+                <i class="fa fa-trash" aria-hidden="true" style="color:red" title="删除" lay-event="delete"></i>
             </script>
         </div>
     </div>
@@ -90,14 +87,14 @@
                             { type: "checkbox", width: 50 },
                             {
                                 field: 'ContainerName', width: 130, title: '青龙容器', sort: true, templet(d) {
-                                    var names="";
+                                    var names = "";
                                     for (var i = 0; i < d.QLPanelCookies.length; i++) {
-        if(i< d.QLPanelCookies.length-1)
-        {
-        
-                                        names += d.QLPanelCookies[i].QLPanelName+"，";}else{
-                                        names += d.QLPanelCookies[i].QLPanelName
-        }
+                                        if (i < d.QLPanelCookies.length - 1) {
+
+                                            names += d.QLPanelCookies[i].QLPanelName + "，";
+                                        } else {
+                                            names += d.QLPanelCookies[i].QLPanelName
+                                        }
                                     }
                                     return (names ?? "未分配")
                                 }
@@ -120,7 +117,7 @@
                                 field: 'Priority', title: '权重', sort: true,
                                 width: 80
                             },
-                            { field: 'nickname', title: '昵称',width: 120 },
+                            { field: 'nickname', title: '昵称', width: 120 },
                             //{
                             //    field: 'beanNum', title: '京豆', sort: true,
                             //    width: 90
@@ -133,10 +130,12 @@
                             },
                             {
                                 field: 'Remark', title: '备注', sort: true,
-                                width: 120 },
+                                width: 120
+                            },
                             {
                                 field: 'CreateTime', title: '添加时间',
-                                width: 150},
+                                width: 150
+                            },
                             //{
                             //    field: 'Top', title: '置顶', sort: true, templet(d) {
                             //        return `<a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="top">${d.Top ? "取消" : "置顶"}</a>`

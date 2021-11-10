@@ -1,6 +1,5 @@
 // -------系统自动配置部分开始(以下内容勿动)-------
 
-
 const notify = require('./sendNotify');
 const jdCookieNode = require('./jdCookie.js');
 require('./env.js');
@@ -9,7 +8,6 @@ const isAdd = process.env.IsAdd == "true";
 const qqbotServicePort = process.env.ServicePort;
 const qq = process.env.qq;
 const push = process.env.Push == "true";
-
 
 // -------系统自动配置部分结束(以上内容勿动)-------
 
@@ -59,11 +57,12 @@ var pt_pin = "";
             } else {
                 console.log("Cookie有效")
                 if ($.isLogin) {
+                    var beanNum = ($.beanNum && $.beanNum > 0) ? "\n剩余京豆：" + $.beanNum : "";
                     if (isAdd) {
                         addCookie();
-                        await notify.sendNotify(`${$.name}`, "提交成功！账户🆔：" + $.nickName + "\r\n绑定QQ：" + qq);
+                        await notify.sendNotify(`${$.name}`, "提交成功！\r账户🆔：" + $.nickName + "\r\n绑定QQ：" + qq + beanNum);
                     } else if (push) {
-                        await notify.sendNotify(`${$.name}`, "账户🆔：" + $.nickName + "，有效✅");
+                        await notify.sendNotify(`${$.name}`, "账户🆔：" + $.nickName + "，有效✅" + beanNum);
                     }
                 }
                 else {
@@ -116,6 +115,9 @@ function TotalBean() {
                             $.nickName = decodeURIComponent($.UserName);
                             console.log("Debug Code:" + data['retcode']);
                             $.NoReturn = `${$.nickName} :` + `服务器返回未知状态，不做变动\n`;
+                        }
+                        if (data['retcode'] === "0" && data.data && data.data.hasOwnProperty("assetInfo")) {
+                            $.beanNum = (data.data.assetInfo.beanNum);
                         }
                     } else {
                         $.nickName = decodeURIComponent($.UserName);

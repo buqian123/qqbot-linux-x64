@@ -78,7 +78,8 @@
                     '.ts': 'typescript'
                 },
                 CheckQLs: [],
-                SelectAllQL: false
+                SelectAllQL: true,
+                defaultFile: null
             },
             methods: {
                 getQLs() {
@@ -89,7 +90,7 @@
                                 configs.CheckQLs.push({
                                     Id: response[i].Id,
                                     Name: response[i].Name,
-                                    Enable: i == 0
+                                    Enable: configs.SelectAllQL || i == 0
                                 })
                             }
                             configs.QLs = response;
@@ -107,7 +108,7 @@
                     axios.get('/api/QLScripts/' + this.SelectQLId)
                         .then(function (response) {
                             configs.Files = response;
-                            configs.SelectFileName = "jdCookie.js";
+                            configs.SelectFileName = configs.defaultFile ?? "jdCookie.js";
                             configs.getFile();
                         })
                         .catch(function (error) {
@@ -168,9 +169,13 @@
                         QLIds: QLIds
                     })
                         .then(function (response) {
-                            configs.$Notice.success({
-                                desc: "修改青龙脚本文件成功！"
-                            })
+                            if (configs.defaultFile) {
+                                parent.layer.closeAll();
+                            } else {
+                                configs.$Notice.success({
+                                    desc: "修改青龙脚本文件成功！"
+                                })
+                            }
                         })
                         .catch(function (error) {
                             configs.$Notice.error({
@@ -181,8 +186,8 @@
                 }
             },
             mounted() {
+                this.defaultFile = (this.$queryString("fileName"))
                 this.getQLs();
-                //this.createEditor();
             }
         });
     </script>

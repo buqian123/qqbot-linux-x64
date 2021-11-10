@@ -53,8 +53,8 @@ if ($.isNode()) {
             $.joylevel = 0;
             await getjdfruit();
             await requestAlgo();
-            await getJxFactory(); //京喜工厂
-            await getDdFactoryInfo(); // 京东工厂
+            //await getJxFactory(); //京喜工厂
+            //await getDdFactoryInfo(); // 京东工厂
             await showMsg();
         }
     }

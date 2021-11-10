@@ -61,8 +61,8 @@ if ($.isNode()) {
             await cash();
             await requestAlgo();
             await JxmcGetRequest();
-            await getJxFactory();   //惊喜工厂
-            await getDdFactoryInfo(); // 京东工厂
+            //await getJxFactory();   //惊喜工厂
+            //await getDdFactoryInfo(); // 京东工厂
             await showMsg();
             
 			if (intPerSent > 0) {
@@ -116,12 +116,12 @@ async function showMsg() {
             ReturnMessage+=`东东农场：${$.JdFarmProdName}\n`;
         }
     }
-    if ($.jxFactoryInfo) {
-        ReturnMessage += `京喜工厂：${$.jxFactoryInfo}🏭\n`
-    }
-    if ($.ddFactoryInfo) {
-        ReturnMessage += `东东工厂：${$.ddFactoryInfo}🏭\n`
-    }
+    //if ($.jxFactoryInfo) {
+    //    ReturnMessage += `京喜工厂：${$.jxFactoryInfo}🏭\n`
+    //}
+    //if ($.ddFactoryInfo) {
+    //    ReturnMessage += `东东工厂：${$.ddFactoryInfo}🏭\n`
+    //}
     const response = await await PetRequest('energyCollect');
     const initPetTownRes = await PetRequest('initPetTown');
     if (initPetTownRes.code === '0' && initPetTownRes.resultCode === '0' && initPetTownRes.message === 'success') {
